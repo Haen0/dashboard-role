@@ -19,10 +19,13 @@
             
             <div class="flex">
                 @auth
-                @include('layouts.sidebar')
+                {{-- Sidebar tetap di sisi kiri --}}
+                <aside class="w-64 hidden md:block h-screen fixed top-0 left-0 bg-white shadow z-20">
+                    @include('layouts.sidebar')
+                </aside>
                 @endauth
-                
-                <div class="flex-1">
+
+                <div class="flex-1 ml-0 @auth md:ml-64 @endauth">
                     {{-- Header --}}
                     @isset($header)
                         @include('layouts.navigation')
@@ -35,5 +38,6 @@
                 </div>
             </div>
         </div>
+        {{-- <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script> --}}
     </body>
 </html>

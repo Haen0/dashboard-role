@@ -42,7 +42,7 @@ class UserManagementController extends Controller
         $query->orderBy($sortField, $sortDir);
 
         // Pagination size
-        $perPage = $request->get('per_page', 10);
+        $perPage = $request->get('per_page',  1);
         $users = $query->paginate($perPage)->withQueryString();
 
         return view('users.index', compact('users'));
@@ -59,7 +59,7 @@ class UserManagementController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|string|min:6|confirmed',
-            'role' => 'required|in:user,admin',
+            'role' => 'required|in:superadmin,admin,keuangan,manajer,advokat,klien',
         ]);
 
         if (auth()->user()->role !== 'superadmin' && $request->role !== 'user') {
@@ -94,7 +94,7 @@ class UserManagementController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . $user->id,
-            'role' => 'required|in:user,admin,superadmin',
+            'role' => 'required|in:superadmin,admin,keuangan,manajer,advokat,klien',
         ]);
 
         if (auth()->user()->role !== 'superadmin' && $request->role !== 'user') {
