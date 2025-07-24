@@ -1,4 +1,4 @@
-@if ($paginator->hasPages())
+{{-- @if ($paginator->hasPages()) --}}
     <div class="flex flex-col md:flex-row items-center justify-between mt-4 text-sm text-gray-700 gap-4">
 
         {{-- Showing --}}
@@ -57,4 +57,4 @@
             </form>
         </div>
     </div>
-@endif
+{{-- @endif --}}

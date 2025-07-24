@@ -46,4 +46,21 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function admin()
+    {
+        return $this->hasOne(Admin::class);
+    }
+
+    // Relasi ke Advokat
+    public function advokat()
+    {
+        return $this->hasOne(Advokat::class);
+    }
+
+    // Relasi ke Klient
+    public function klient()
+    {
+        return $this->hasOne(Klient::class);
+    }
 }

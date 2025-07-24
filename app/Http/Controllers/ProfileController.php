@@ -16,8 +16,22 @@ class ProfileController extends Controller
      */
     public function edit(Request $request): View
     {
+        $user = $request->user();
+
+        $klien = null;
+        $advokat = null;
+
+        if ($user->role === 'klien') {
+            $klien = $user->klient; // relasi one-to-one dari User ke Klient
+        }
+
+        if ($user->role === 'advokat') {
+            $advokat = $user->advokat; // relasi one-to-one dari User ke Advokat
+        }
         return view('profile.edit', [
             'user' => $request->user(),
+            'klien' => $klien,
+            'advokat' => $advokat,
         ]);
     }
 
@@ -35,6 +49,35 @@ class ProfileController extends Controller
         $request->user()->save();
 
         return Redirect::route('profile.edit')->with('status', 'profile-updated');
+    }
+
+    public function updateAdvokat(Request $request)
+    {
+        $request->validate([
+            'spesialis' => 'required|string|max:255',
+            'telepon' => 'required|string|max:20',
+        ]);
+
+        $advokat = auth()->user()->advokat;
+        $advokat->update(['spesialis' => $request->spesialis]);
+
+        return back()->with('status', 'advokat-updated');
+    }
+
+    public function updateKlien(Request $request)
+    {
+        $request->validate([
+            'telepon' => 'required|string|max:20',
+            'alamat' => 'required|string|max:255',
+        ]);
+
+        $klien = auth()->user()->klient;
+        $klien->update([
+            'telepon' => $request->telepon,
+            'alamat' => $request->alamat,
+        ]);
+
+        return back()->with('status', 'klien-updated');
     }
 
     /**

@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Admin;
+use App\Models\Advokat;
+use App\Models\Klient;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
@@ -10,15 +13,11 @@ class UserManagementController extends Controller
 {
     public function index(Request $request)
     {
-        if (auth()->user()->role === 'user') {
-            abort(403);
-        }
-
         $query = User::query();
 
-        // Admin hanya bisa melihat user, tidak bisa melihat admin/superadmin
+        // Admin hanya bisa melihat klien & advokat
         if (auth()->user()->role === 'admin') {
-            $query->where('role', 'user');
+            $query->whereIn('role', ['klien', 'advokat']);
         }
 
         // Filter by name
@@ -31,7 +30,7 @@ class UserManagementController extends Controller
             $query->where('email', 'like', '%' . $request->email . '%');
         }
 
-        // Filter by role (superadmin akan tetap bisa lihat semua)
+        // Filter by role
         if ($request->filled('role')) {
             $query->where('role', $request->role);
         }
@@ -41,8 +40,8 @@ class UserManagementController extends Controller
         $sortDir = $request->get('direction', 'desc');
         $query->orderBy($sortField, $sortDir);
 
-        // Pagination size
-        $perPage = $request->get('per_page',  1);
+        // Pagination
+        $perPage = $request->get('per_page', 10);
         $users = $query->paginate($perPage)->withQueryString();
 
         return view('users.index', compact('users'));
@@ -62,23 +61,48 @@ class UserManagementController extends Controller
             'role' => 'required|in:superadmin,admin,keuangan,manajer,advokat,klien',
         ]);
 
-        if (auth()->user()->role !== 'superadmin' && $request->role !== 'user') {
-            abort(403, 'Unauthorized role assignment');
+        // Admin hanya boleh membuat klien & advokat
+        if (auth()->user()->role === 'admin' && !in_array($request->role, ['klien', 'advokat'])) {
+            abort(403, 'Admin hanya bisa membuat Klien atau Advokat.');
         }
 
-        User::create([
+        // Buat user utama
+        $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'role' => $request->role,
         ]);
 
+        // Tambah data ke tabel sesuai role
+        if (in_array($request->role, ['admin', 'keuangan', 'manajer'])) {
+            Admin::create([
+                'user_id' => $user->id,
+                'nama'    => $request->name,
+                'email'   => $request->email,
+                'role'    => $request->role,
+            ]);
+        } elseif ($request->role === 'advokat') {
+            Advokat::create([
+                'user_id' => $user->id,
+                'nama' => $request->name,
+                'email' => $request->email,
+            ]);
+        } elseif ($request->role === 'klien') {
+            Klient::create([
+                'user_id' => $user->id,
+                'nama' => $request->name,
+                'email' => $request->email,
+            ]);
+        }
+
         return redirect()->route('users.index')->with('success', 'User berhasil ditambahkan.');
     }
 
     public function edit(User $user)
     {
-        if (auth()->user()->role !== 'superadmin' && $user->role !== 'user') {
+        // Admin tidak bisa edit superadmin / admin lain
+        if (auth()->user()->role === 'admin' && !in_array($user->role, ['klien', 'advokat'])) {
             abort(403);
         }
 
@@ -87,7 +111,7 @@ class UserManagementController extends Controller
 
     public function update(Request $request, User $user)
     {
-        if (auth()->user()->role !== 'superadmin' && $user->role !== 'user') {
+        if (auth()->user()->role === 'admin' && !in_array($user->role, ['klien', 'advokat'])) {
             abort(403);
         }
 
@@ -97,8 +121,8 @@ class UserManagementController extends Controller
             'role' => 'required|in:superadmin,admin,keuangan,manajer,advokat,klien',
         ]);
 
-        if (auth()->user()->role !== 'superadmin' && $request->role !== 'user') {
-            abort(403, 'Unauthorized role assignment');
+        if (auth()->user()->role === 'admin' && !in_array($request->role, ['klien', 'advokat'])) {
+            abort(403, 'Admin hanya bisa update Klien atau Advokat.');
         }
 
         $user->update([
@@ -107,12 +131,25 @@ class UserManagementController extends Controller
             'role' => $request->role,
         ]);
 
+        // Update data di tabel terkait
+        if (in_array($user->role, ['admin', 'keuangan', 'manajer']) && $user->admin) {
+            $user->admin->update([
+                'nama'  => $request->name,
+                'email' => $request->email,
+                'role'  => $request->role,
+            ]);
+        } elseif ($user->role === 'advokat' && $user->advokat) {
+            $user->advokat->update(['nama' => $request->name, 'email' => $request->email]);
+        } elseif ($user->role === 'klien' && $user->klient) {
+            $user->klient->update(['nama' => $request->name, 'email' => $request->email]);
+        }
+
         return redirect()->route('users.index')->with('success', 'User berhasil diupdate.');
     }
 
     public function destroy(User $user)
     {
-        if (auth()->user()->role !== 'superadmin' && $user->role !== 'user') {
+        if (auth()->user()->role === 'admin' && !in_array($user->role, ['klien', 'advokat'])) {
             abort(403);
         }
 

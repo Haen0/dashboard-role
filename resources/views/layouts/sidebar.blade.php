@@ -3,7 +3,6 @@
         <div>
             <div class="font-bold text-lg mb-4">Menu</div>
             <ul class="space-y-2">
-                {{-- Dashboard --}}
                 <li>
                     <a href="{{ route('dashboard') }}"
                         class="block px-3 py-2 rounded hover:bg-gray-100 {{ request()->routeIs('dashboard') ? 'bg-gray-100 font-semibold' : '' }}">
@@ -12,7 +11,7 @@
                 </li>
 
                 {{-- Manajemen User (Dropdown - Superadmin) --}}
-                @if(auth()->user()->role === 'superadmin')
+                @if(in_array(auth()->user()->role, ['admin', 'superadmin']))
                     <li x-data="{ open: {{ request()->routeIs('users.*') || request()->routeIs('klients.*') || request()->routeIs('advokats.*') ? 'true' : 'false' }} }">
                         <button type="button"
                             @click="open = !open"
@@ -35,15 +34,14 @@
                                 </a>
                             </li>
                             <li>
-                                {{-- <a href="{{ route('klients.index') }}" --}}
-                                <a href=""
+                                <a href="{{ route('klients.index') }}"
                                     class="block px-3 py-2 rounded hover:bg-gray-100 {{ request()->routeIs('klients.*') ? 'bg-gray-100 font-semibold' : '' }}">
                                     Data Klien
                                 </a>
                             </li>
                             <li>
-                                {{-- <a href="{{ route('advokats.index') }}" --}}
-                                <a href=""
+                                <a href="{{ route('advokats.index') }}"
+                                {{-- <a href="" --}}
                                     class="block px-3 py-2 rounded hover:bg-gray-100 {{ request()->routeIs('advokats.*') ? 'bg-gray-100 font-semibold' : '' }}">
                                     Data Advokat
                                 </a>
@@ -55,8 +53,7 @@
                 {{-- Ajukan Konsultasi (Klien + Admin + Superadmin) --}}
                 @if(in_array(auth()->user()->role, ['klien', 'admin', 'superadmin']))
                     <li>
-                        {{-- <a href="{{ route('konsultasis.create') }}" --}}
-                        <a href=""
+                        <a href="{{ route('konsultasis.create') }}"
                             class="block px-3 py-2 rounded hover:bg-gray-100 {{ request()->routeIs('konsultasis.create') ? 'bg-gray-100 font-semibold' : '' }}">
                             Ajukan Konsultasi
                         </a>
@@ -81,21 +78,19 @@
 
                         <ul x-show="open" x-transition class="ml-4 mt-2 space-y-2">
                             <li>
-                                {{-- <a href="{{ route('konsultasis.index') }}" --}}
-                                <a href=""
+                                <a href="{{ route('konsultasis.index') }}"
                                     class="block px-3 py-2 rounded hover:bg-gray-100 {{ request()->routeIs('konsultasis.index') ? 'bg-gray-100 font-semibold' : '' }}">
                                     Daftar Konsultasi
                                 </a>
                             </li>
-                            @if(in_array(auth()->user()->role, ['klien', 'admin', 'superadmin']))
+                            {{-- @if(in_array(auth()->user()->role, ['klien', 'admin', 'superadmin'])) --}}
                                 <li>
-                                    {{-- <a href="{{ route('jadwals.index') }}" --}}
-                                    <a href=""
+                                    <a href="{{ route('jadwals.index') }}"
                                         class="block px-3 py-2 rounded hover:bg-gray-100 {{ request()->routeIs('jadwals.index') ? 'bg-gray-100 font-semibold' : '' }}">
                                         Jadwal Konsultasi
                                     </a>
                                 </li>
-                            @endif
+                            {{-- @endif --}}
                         </ul>
                     </li>
                 @endif
@@ -103,8 +98,7 @@
                 {{-- Dokumen Hukum --}}
                 @if(in_array(auth()->user()->role, ['admin', 'advokat', 'superadmin']))
                     <li>
-                        {{-- <a href="{{ route('dokumens.index') }}" --}}
-                        <a href=""
+                        <a href="{{ route('dokumen.hukum.index') }}"
                             class="block px-3 py-2 rounded hover:bg-gray-100 {{ request()->routeIs('dokumens.*') ? 'bg-gray-100 font-semibold' : '' }}">
                             Dokumen Hukum
                         </a>
@@ -135,7 +129,7 @@
 
                 {{-- Profil Saya --}}
                 <li>
-                    <li href="{{ route('profile.edit') }}"
+                    <a href="{{ route('profile.edit') }}"
                         class="block px-3 py-2 rounded hover:bg-gray-100 {{ request()->routeIs('profile.edit') ? 'bg-gray-100 font-semibold' : '' }}">
                         Profil
                     </a>
@@ -144,6 +138,7 @@
                 {{-- Logout --}}
             </ul>
         </div>
+        
         <div class="grid pt-4 items-end">
             <form method="POST" action="{{ route('logout') }}">
                 @csrf

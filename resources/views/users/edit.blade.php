@@ -15,9 +15,12 @@
 
             <x-input-label for="role" value="Role" />
             <select name="role" class="w-full border rounded mb-4">
-                <option value="user" @selected($user->role === 'user')>User</option>
+                <option value="klien" @selected($user->role === 'klien')>Klien</option>
                 @if(auth()->user()->role === 'superadmin')
-                    <option value="admin" @selected($user->role === 'admin')>Admin</option>
+                <option value="admin" @selected($user->role === 'admin')>Admin</option>
+                <option value="advokat" @selected($user->role === 'advokat')>Advokat</option>
+                <option value="keuangan" @selected($user->role === 'keuangan')>Keuangan</option>
+                <option value="manajer" @selected($user->role === 'manajer')>Manajer</option>
                     <option value="superadmin" @selected($user->role === 'superadmin')>Superadmin</option>
                 @endif
             </select>
