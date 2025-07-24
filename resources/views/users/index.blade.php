@@ -33,12 +33,12 @@
             <a href="{{ route('users.index') }}" class="text-sm text-gray-500">Reset</a>
         </form>
 
-        <div class="overflow-x-auto bg-white rounded shadow">
-            <table class="min-w-full text-sm text-left table-auto">
-                <thead class="bg-gray-100">
+        <div class="relative overflow-x-auto shadow-md sm:rounded-lg bg-white">
+            <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                     <tr>
                         @foreach (['name' => 'Nama', 'email' => 'Email', 'role' => 'Role', 'created_at' => 'Dibuat'] as $field => $label)
-                            <th class="px-4 py-2">
+                            <th scope="col" class="px-6 py-3">
                                 <a href="{{ route('users.index', array_merge(request()->all(), ['sort' => $field, 'direction' => request('direction') === 'asc' ? 'desc' : 'asc'])) }}">
                                     {{ $label }}
                                     @if(request('sort') === $field)
@@ -47,27 +47,36 @@
                                 </a>
                             </th>
                         @endforeach
-                        <th class="px-4 py-2">Aksi</th>
+                        <th scope="col" class="px-6 py-3 text-right">
+                            <span class="sr-only">Aksi</span>
+                        </th>
                     </tr>
                 </thead>
                 <tbody>
                     @forelse ($users as $user)
-                        <tr class="border-b hover:bg-gray-50">
-                            <td class="px-4 py-2">{{ $user->name }}</td>
-                            <td class="px-4 py-2">{{ $user->email }}</td>
-                            <td class="px-4 py-2">{{ $user->role }}</td>
-                            <td class="px-4 py-2">{{ $user->created_at->format('d M Y') }}</td>
-                            <td class="px-4 py-2 space-x-2">
+                        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                            <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                {{ $user->name }}
+                            </th>
+                            <td class="px-6 py-4">
+                                {{ $user->email }}
+                            </td>
+                            <td class="px-6 py-4">
+                                {{ $user->role }}
+                            </td>
+                            <td class="px-6 py-4">
+                                {{ $user->created_at->format('d M Y') }}
+                            </td>
+                            <td class="px-6 py-4 text-right space-x-2">
                                 @php
                                     $canManage = auth()->user()->role === 'superadmin' || (auth()->user()->role === 'admin' && $user->role === 'user');
                                 @endphp
 
                                 @if($canManage)
-                                    <a href="{{ route('users.edit', $user) }}" class="text-blue-600 text-sm hover:underline">Edit</a>
-
+                                    <a href="{{ route('users.edit', $user) }}" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
                                     <form action="{{ route('users.destroy', $user) }}" method="POST" class="inline">
                                         @csrf @method('DELETE')
-                                        <button onclick="return confirm('Yakin hapus user ini?')" class="text-red-600 text-sm hover:underline">Hapus</button>
+                                        <button onclick="return confirm('Yakin hapus user ini?')" class="font-medium text-red-600 dark:text-red-500 hover:underline">Hapus</button>
                                     </form>
                                 @else
                                     <span class="text-gray-400 text-sm">Tidak bisa dikelola</span>
@@ -75,11 +84,14 @@
                             </td>
                         </tr>
                     @empty
-                        <tr><td colspan="5" class="text-center px-4 py-2">Tidak ada data.</td></tr>
+                        <tr>
+                            <td colspan="5" class="px-6 py-4 text-center text-gray-500">Tidak ada data.</td>
+                        </tr>
                     @endforelse
                 </tbody>
             </table>
         </div>
+
 
         <div>
             {{ $users->links('vendor.pagination.custom') }}

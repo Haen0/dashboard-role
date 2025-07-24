@@ -8,16 +8,16 @@
             @csrf
 
             <x-input-label for="name" value="Nama" />
-            <x-text-input name="name" type="text" class="w-full mb-2" required />
+            <x-text-input name="name" type="text" class="w-full mb-2 text-lg" required />
 
             <x-input-label for="email" value="Email" />
-            <x-text-input name="email" type="email" class="w-full mb-2" required />
+            <x-text-input name="email" type="email" class="w-full mb-2 text-lg" required />
 
             <x-input-label for="password" value="Password" />
-            <x-text-input name="password" type="password" class="w-full mb-2" required />
+            <x-text-input name="password" type="password" class="w-full mb-2 text-lg" required />
 
             <x-input-label for="password_confirmation" value="Konfirmasi Password" />
-            <x-text-input name="password_confirmation" type="password" class="w-full mb-2" required />
+            <x-text-input name="password_confirmation" type="password" class="w-full mb-2 text-lg" required />
 
             <x-input-label for="role" value="Role" />
             <select name="role" class="w-full border rounded mb-4">

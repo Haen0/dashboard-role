@@ -7,6 +7,28 @@
                     Dashboard
                 </a>
             </li>
+
+            {{-- // Page Advokat --}}
+            @if(auth()->user()->role === 'admin' || auth()->user()->role === 'superadmin')
+                <li>
+                    <a href="{{ route('advokats.index') }}"
+                    class="block px-3 py-2 rounded hover:bg-gray-100 {{ request()->routeIs('advokats.*') ? 'bg-gray-100 font-semibold' : '' }}">
+                        Data Advokat
+                    </a>
+                </li>
+            @endif
+
+            {{-- // Page Konsultasi --}}
+            @if(auth()->user()->role === 'admin' || auth()->user()->role === 'superadmin')
+                <li>
+                    <a href="{{ route('konsultasi.index') }}"
+                    class="block px-3 py-2 rounded hover:bg-gray-100 {{ request()->routeIs('konsultasi.*') ? 'bg-gray-100 font-semibold' : '' }}">
+                        Konsultasi
+                    </a>
+                </li>
+            @endif
+
+            {{-- // Page User --}}
             <li>
                 <a href="{{ route('profile.edit') }}" class="block px-3 py-2 rounded hover:bg-gray-100 {{ request()->routeIs('profile.edit') ? 'bg-gray-100 font-semibold' : '' }}">
                     Profil
