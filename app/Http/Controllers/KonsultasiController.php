@@ -16,7 +16,7 @@ class KonsultasiController extends Controller
         $query = Konsultasi::with(['klien', 'advokat', 'dokumens']);
 
         // Batasi berdasarkan role
-        if (auth()->user()->role === 'klient') {
+        if (auth()->user()->role === 'klien') {
             $query->where('klien_id', auth()->user()->klient->id);
         } elseif (auth()->user()->role === 'advokat') {
             $query->where('advokat_id', auth()->user()->advokat->id);

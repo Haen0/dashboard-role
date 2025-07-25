@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Pembayaran;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -123,6 +124,19 @@ class PembayaranController extends Controller
     {
         $pembayaran->update(['status' => 'sudah_bayar']);
         return back()->with('success', 'Pembayaran dikonfirmasi.');
+    }
+
+    public function invoice(Pembayaran $pembayaran)
+    {
+        $pembayaran->load('konsultasi.klien', 'konsultasi.advokat');
+
+        $pdf = Pdf::loadView('pembayaran.invoice', [
+            'pembayaran' => $pembayaran,
+        ]);
+
+        $fileName = 'invoice-' . $pembayaran->id . '.pdf';
+
+        return $pdf->download($fileName);
     }
 
 }

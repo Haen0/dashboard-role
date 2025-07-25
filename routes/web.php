@@ -56,6 +56,9 @@ Route::middleware(['role:klien'])->group(function () {
 
     Route::post('/pembayaran/{pembayaran}/upload', [PembayaranController::class, 'uploadBukti'])
         ->name('pembayaran.upload');
+    Route::get('/pembayaran/{pembayaran}/invoice', [PembayaranController::class, 'invoice'])
+    ->name('pembayaran.invoice');
+
 });
 
 // Klien + Admin + Superadmin

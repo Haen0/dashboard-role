@@ -16,7 +16,7 @@ class JadwalController extends Controller
             $query->whereHas('konsultasi', function ($q) {
                 $q->where('advokat_id', auth()->user()->advokat->id);
             });
-        } elseif (auth()->user()->role === 'klient') {
+        } elseif (auth()->user()->role === 'klien') {
             $query->whereHas('konsultasi', function ($q) {
                 $q->where('klien_id', auth()->user()->klient->id);
             });
