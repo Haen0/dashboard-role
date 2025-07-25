@@ -10,6 +10,8 @@
                     </a>
                 </li>
 
+                <hr class="p-2">
+
                 {{-- Manajemen User (Dropdown - Superadmin) --}}
                 @if(in_array(auth()->user()->role, ['admin', 'superadmin']))
                     <li x-data="{ open: {{ request()->routeIs('users.*') || request()->routeIs('klients.*') || request()->routeIs('advokats.*') ? 'true' : 'false' }} }">
@@ -50,16 +52,6 @@
                     </li>
                 @endif
 
-                {{-- Ajukan Konsultasi (Klien + Admin + Superadmin) --}}
-                @if(in_array(auth()->user()->role, ['klien', 'admin', 'superadmin']))
-                    <li>
-                        <a href="{{ route('konsultasis.create') }}"
-                            class="block px-3 py-2 rounded hover:bg-gray-100 {{ request()->routeIs('konsultasis.create') ? 'bg-gray-100 font-semibold' : '' }}">
-                            Ajukan Konsultasi
-                        </a>
-                    </li>
-                @endif
-
                 {{-- Konsultasi Hukum (Dropdown) --}}
                 @if(in_array(auth()->user()->role, ['klien', 'admin', 'advokat', 'superadmin']))
                     <li x-data="{ open: {{ request()->routeIs('konsultasis.*') || request()->routeIs('jadwals.*') ? 'true' : 'false' }} }">
@@ -77,6 +69,16 @@
                         </button>
 
                         <ul x-show="open" x-transition class="ml-4 mt-2 space-y-2">
+                            {{-- Ajukan Konsultasi (Klien + Admin + Superadmin) --}}
+                            @if(in_array(auth()->user()->role, ['klien', 'admin', 'superadmin']))
+                                <li>
+                                    <a href="{{ route('konsultasis.create') }}"
+                                        class="block px-3 py-2 rounded hover:bg-gray-100 {{ request()->routeIs('konsultasis.create') ? 'bg-gray-100 font-semibold' : '' }}">
+                                        Ajukan Konsultasi
+                                    </a>
+                                </li>
+                            @endif
+
                             <li>
                                 <a href="{{ route('konsultasis.index') }}"
                                     class="block px-3 py-2 rounded hover:bg-gray-100 {{ request()->routeIs('konsultasis.index') ? 'bg-gray-100 font-semibold' : '' }}">
@@ -120,12 +122,13 @@
                 @if(in_array(auth()->user()->role, ['admin', 'keuangan', 'advokat', 'manajer', 'superadmin']))
                     <li>
                         {{-- <a href="{{ route('laporans.index') }}" --}}
-                        <a href=""
+                        <a href="{{ route('laporans.index') }}"
                             class="block px-3 py-2 rounded hover:bg-gray-100 {{ request()->routeIs('laporans.*') ? 'bg-gray-100 font-semibold' : '' }}">
                             Laporan
                         </a>
                     </li>
                 @endif
+
 
                 {{-- Profil Saya --}}
                 <li>
