@@ -5,6 +5,10 @@
 
     <div class="py-4 px-4 space-y-4">
 
+        @if(session('success'))
+            <div class="bg-green-100 text-green-800 p-2 mb-4 rounded">{{ session('success') }}</div>
+        @endif
+
         @if(auth()->user()->role === 'superadmin' || auth()->user()->role === 'admin')
             <div class="mb-4">
                 <a href="{{ route('users.create') }}"
@@ -64,7 +68,7 @@
             </div>
         </form>
 
-        <div class="relative overflow-x-auto shadow-md sm:rounded-lg bg-white">
+        <div class="relative overflow-x-auto shadow-md rounded-lg bg-white">
             <table class="w-full text-sm text-left text-gray-500">
                 <thead class="text-xs text-gray-700 uppercase bg-gray-50">
                     <tr>

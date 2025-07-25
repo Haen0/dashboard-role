@@ -108,8 +108,7 @@
                 {{-- Tagihan & Pembayaran --}}
                 @if(in_array(auth()->user()->role, ['keuangan', 'superadmin']))
                     <li>
-                        {{-- <a href="{{ route('pembayarans.index') }}" --}}
-                        <a href=""
+                        <a href="{{ route('pembayaran.index') }}"
                             class="block px-3 py-2 rounded hover:bg-gray-100 {{ request()->routeIs('pembayarans.*') ? 'bg-gray-100 font-semibold' : '' }}">
                             Tagihan & Pembayaran
                         </a>

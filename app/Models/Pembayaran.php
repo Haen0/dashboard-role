@@ -14,7 +14,8 @@ class Pembayaran extends Model
         'tanggal',
         'jumlah',
         'metode',
-        'status'
+        'status',
+        'bukti_pembayaran'
     ];
 
     public function konsultasi()

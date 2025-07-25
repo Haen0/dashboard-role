@@ -59,7 +59,10 @@ class ProfileController extends Controller
         ]);
 
         $advokat = auth()->user()->advokat;
-        $advokat->update(['spesialis' => $request->spesialis]);
+        $advokat->update([
+            'spesialis' => $request->spesialis,
+            'telepon' => $request->telepon,
+        ]);
 
         return back()->with('status', 'advokat-updated');
     }

@@ -14,9 +14,9 @@ return new class extends Migration
         Schema::create('pembayarans', function (Blueprint $table) {
             $table->id();
             $table->foreignId('konsultasi_id')->constrained('konsultasis')->onDelete('cascade');
-            $table->date('tanggal');
-            $table->decimal('jumlah', 12, 2);
-            $table->enum('metode', ['transfer', 'cash', 'qris']);
+            $table->date('tanggal')->nullable();
+            $table->decimal('jumlah', 12, 2)->nullable();
+            $table->enum('metode', ['transfer', 'cash', 'qris'])->nullable();
             $table->enum('status', ['belum_bayar', 'sudah_bayar', 'menunggu_konfirmasi'])->default('belum_bayar');
             $table->timestamps();
         });

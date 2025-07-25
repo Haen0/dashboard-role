@@ -4,10 +4,12 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserManagementController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdvokatController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DokumenController;
 use App\Http\Controllers\JadwalController;
 use App\Http\Controllers\KlientController;
 use App\Http\Controllers\KonsultasiController;
+use App\Http\Controllers\PembayaranController;
 
 Route::get('/', function () {
     return redirect()->route('dashboard');
@@ -16,9 +18,11 @@ Route::get('/', function () {
 // Authentication Routes
 
 Route::middleware(['auth'])->group(function () {
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
+    // Route::get('/dashboard', function () {
+    //     return view('dashboard');
+    // })->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::patch('/profile/advokat', [ProfileController::class, 'updateAdvokat'])->name('profile.update.advokat');
@@ -41,6 +45,17 @@ Route::middleware(['auth', 'role:admin,superadmin'])->group(function () {
 Route::middleware(['role:superadmin'])->group(function () {
     // Route::resource('users', UserManagementController::class)->except(['index']); 
     // misal hanya superadmin bisa create/edit/hapus user
+});
+
+// Hanya Superadmin
+Route::middleware(['role:klien'])->group(function () {
+        // Klien upload bukti pembayaran
+    Route::get('/pembayaran/{pembayaran}/bayar', function (\App\Models\Pembayaran $pembayaran) {
+        return view('pembayaran.bayar', compact('pembayaran'));
+    })->name('pembayaran.bayar');
+
+    Route::post('/pembayaran/{pembayaran}/upload', [PembayaranController::class, 'uploadBukti'])
+        ->name('pembayaran.upload');
 });
 
 // Klien + Admin + Superadmin
@@ -69,7 +84,16 @@ Route::middleware(['role:admin,advokat,superadmin'])->group(function () {
 
 // Keuangan & Superadmin (Pembayaran)
 Route::middleware(['role:keuangan,superadmin'])->group(function () {
-    
+    Route::get('/pembayaran', [PembayaranController::class, 'index'])->name('pembayaran.index');
+    Route::get('/pembayaran/{pembayaran}/edit', [PembayaranController::class, 'edit'])->name('pembayaran.edit');
+    Route::put('/pembayaran/{pembayaran}', [PembayaranController::class, 'update'])->name('pembayaran.update');
+    // Route::post('/pembayaran/{pembayaran}/update', [PembayaranController::class, 'update'])->name('pembayaran.update');
+    // Route::post('/pembayaran/{pembayaran}/upload-bukti', [PembayaranController::class, 'uploadBukti'])->name('pembayaran.upload');
+
+    Route::post('/pembayaran/{pembayaran}/konfirmasi', [PembayaranController::class, 'konfirmasi'])->name('pembayaran.konfirmasi');
+    Route::get('/pembayaran/bukti/{pembayaran}', [PembayaranController::class, 'previewBukti'])
+        ->name('pembayaran.preview')
+        ->middleware('auth');
 });
 
 // Admin, Keuangan, Advokat, Manajer, Superadmin (Laporan)
