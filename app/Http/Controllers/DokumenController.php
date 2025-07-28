@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Konsultasi;
 use App\Models\Dokumen;
+use App\Models\Pembayaran;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -13,17 +14,25 @@ class DokumenController extends Controller
     {
         $query = Konsultasi::with(['klien', 'advokat', 'dokumens']);
 
-        // Jika role klien, hanya lihat konsultasi miliknya
-        if (auth()->user()->role === 'klien') {
-            $query->where('klien_id', auth()->user()->klient->id);
+        if ($request->filled('klien')) {
+            $query->whereHas('klien', function ($q) use ($request) {
+                $q->where('nama', 'like', '%' . $request->klien . '%');
+            });
         }
 
-        // Jika role advokat, hanya lihat konsultasi miliknya
-        if (auth()->user()->role === 'advokat') {
-            $query->where('advokat_id', auth()->user()->advokat->id);
+        if ($request->filled('advokat')) {
+            $query->whereHas('advokat', function ($q) use ($request) {
+                $q->where('nama', 'like', '%' . $request->advokat . '%');
+            });
         }
 
-        $konsultasis = $query->latest()->paginate(10);
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        $konsultasis = $query->latest()->paginate($request->get('per_page', 10))
+                                ->appends($request->query());
+
         return view('dokumen.index', compact('konsultasis'));
     }
 
@@ -69,6 +78,17 @@ class DokumenController extends Controller
         }
 
         $konsultasi->update(['status' => 'selesai']);
-        return back()->with('success', 'Konsultasi berhasil diselesaikan.');
+
+        // Buat entry pembayaran otomatis jika belum ada
+        Pembayaran::firstOrCreate(
+            ['konsultasi_id' => $konsultasi->id],
+            [
+                'status' => 'belum_bayar',
+                'jumlah' => null,  // akan diisi oleh keuangan
+                'tanggal' => null  // akan diisi oleh keuangan
+            ]
+        );
+
+        return back()->with('success', 'Konsultasi berhasil diselesaikan dan tagihan dibuat.');
     }
 }

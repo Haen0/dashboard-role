@@ -11,7 +11,54 @@
             <div class="bg-red-100 text-red-800 p-2 mb-4 rounded">{{ session('error') }}</div>
         @endif
 
-        <div class="overflow-x-auto bg-white shadow rounded">
+        {{-- Filter Form --}}
+        <form method="GET" class="flex flex-wrap gap-3 items-center mb-4">
+            <div>
+                <input name="klien" value="{{ request('klien') }}"
+                    type="text"
+                    placeholder="Nama Klien"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
+            </div>
+
+            <div>
+                <input name="advokat" value="{{ request('advokat') }}"
+                    type="text"
+                    placeholder="Nama Advokat"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
+            </div>
+
+            <div>
+                <select name="status"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 w-36 p-2.5">
+                    <option value="">Semua Status</option>
+                    <option value="pending" @selected(request('status') == 'pending')>Pending</option>
+                    <option value="diproses" @selected(request('status') == 'diproses')>Diproses</option>
+                    <option value="selesai" @selected(request('status') == 'selesai')>Selesai</option>
+                </select>
+            </div>
+
+            <div>
+                <select name="per_page"
+                        class="w-20 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5">
+                    <option value="10" @selected(request('per_page') == 10)>10</option>
+                    <option value="20" @selected(request('per_page') == 20)>20</option>
+                    <option value="50" @selected(request('per_page') == 50)>50</option>
+                </select>
+            </div>
+
+            <div class="flex gap-2">
+                <button type="submit"
+                        class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center">
+                    Filter
+                </button>
+                <a href="{{ route('dokumen.hukum.index') }}"
+                    class="text-white bg-gray-600 hover:bg-gray-700 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-4 py-2 text-center">
+                    Reset
+                </a>
+            </div>
+        </form>
+
+        <div class="overflow-x-auto relative shadow-md rounded-lg bg-white">
             <table class="w-full text-sm text-left text-gray-700">
                 <thead class="bg-gray-50 text-gray-700 uppercase">
                     <tr>
@@ -45,29 +92,40 @@
                             </td>
                             <td class="px-4 py-2">
                                 @if($dok_admin)
-                                    <a href="{{ route('dokumens.preview', $dok_admin->id) }}" target="_blank" class="text-blue-600 underline">
+                                    <a href="{{ route('dokumens.preview', $dok_admin->id) }}" target="_blank"
+                                    class="text-blue-600 hover:underline font-medium">
                                         {{ $dok_admin->nama_dokumen }}
                                     </a>
                                 @elseif(auth()->user()->role === 'admin' || auth()->user()->role === 'superadmin')
-                                    <form action="{{ route('dokumen.hukum.upload.admin', $k->id) }}" method="POST" enctype="multipart/form-data">
+                                    <form action="{{ route('dokumen.hukum.upload.admin', $k->id) }}" method="POST" enctype="multipart/form-data" class="space-y-2">
                                         @csrf
-                                        <input type="file" name="dokumen" class="text-sm mb-1">
-                                        <button class="bg-blue-600 text-white px-2 py-1 rounded text-xs">Upload</button>
+                                        <input type="file" name="dokumen"
+                                            class="block w-full text-sm text-gray-900 border border-gray-300 rounded-md cursor-pointer bg-gray-50 focus:outline-none">
+                                        <button type="submit"
+                                                class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-xs px-3 py-1.5">
+                                            Upload
+                                        </button>
                                     </form>
                                 @else
                                     <span class="text-gray-400 italic">Belum ada</span>
                                 @endif
                             </td>
+
                             <td class="px-4 py-2">
                                 @if($dok_adv)
-                                    <a href="{{ route('dokumens.preview', $dok_adv->id) }}" target="_blank" class="text-blue-600 underline">
+                                    <a href="{{ route('dokumens.preview', $dok_adv->id) }}" target="_blank"
+                                    class="text-blue-600 hover:underline font-medium">
                                         {{ $dok_adv->nama_dokumen }}
                                     </a>
                                 @elseif(auth()->user()->role === 'advokat')
-                                    <form action="{{ route('dokumen.hukum.upload.advokat', $k->id) }}" method="POST" enctype="multipart/form-data">
+                                    <form action="{{ route('dokumen.hukum.upload.advokat', $k->id) }}" method="POST" enctype="multipart/form-data" class="space-y-2">
                                         @csrf
-                                        <input type="file" name="dokumen" class="text-sm mb-1">
-                                        <button class="bg-green-600 text-white px-2 py-1 rounded text-xs">Upload</button>
+                                        <input type="file" name="dokumen"
+                                            class="block w-full text-sm text-gray-900 border border-gray-300 rounded-md cursor-pointer bg-gray-50 focus:outline-none">
+                                        <button type="submit"
+                                                class="text-white bg-green-600 hover:bg-green-700 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-xs px-3 py-1.5">
+                                            Upload
+                                        </button>
                                     </form>
                                 @else
                                     <span class="text-gray-400 italic">Belum ada</span>

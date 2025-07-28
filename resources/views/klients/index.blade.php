@@ -50,7 +50,7 @@
         </form>
 
         {{-- Tabel Klien --}}
-        <div class="relative overflow-x-auto shadow-md sm:rounded-lg bg-white">
+        <div class="relative overflow-x-auto shadow-md rounded-lg bg-white">
             <table class="w-full text-sm text-left text-gray-500">
                 <thead class="text-xs text-gray-700 uppercase bg-gray-50">
                     <tr>
