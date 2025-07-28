@@ -60,7 +60,7 @@
                         <th class="px-4 py-3">Advokat</th>
                         <th class="px-4 py-3">Jumlah</th>
                         <th class="px-4 py-3">Tanggal</th>
-                        <th class="px-4 py-3">Bukti Pembayaran</th>
+                        <th class="px-4 py-3">Invoice</th>
                         <th class="px-4 py-3">Status</th>
                         <th class="px-4 py-3">Aksi</th>
                     </tr>
@@ -73,23 +73,16 @@
                             <td class="px-4 py-2">{{ $p->jumlah ? 'Rp '.number_format($p->jumlah, 0, ',', '.') : '-' }}</td>
                             <td class="px-4 py-2">{{ $p->tanggal ?? '-' }}</td>
                             <td class="px-4 py-2">
-                                @if($p->bukti_pembayaran)
-                                    <a href="{{ route('pembayaran.preview', $p->id) }}" 
-                                    target="_blank" 
-                                    class="text-blue-600 underline">
-                                        Lihat Bukti
-                                    </a>
-                                @else
-                                    <span class="text-gray-400 italic">Belum ada</span>
-                                @endif
+                                <a href="{{ route('pembayaran.invoice', $p->id) }}"
+                                    class="text-blue-600 hover:underline">Unduh</a>
                             </td>
                             <td class="px-4 py-2">{{ ucfirst(str_replace('_',' ',$p->status)) }}</td>
                             <td class="px-4 py-2 space-x-2">
-                                @if($p->status !== 'sudah_bayar')
+                                @if($p->tanggal === '')
                                     <a href="{{ route('pembayaran.edit', $p->id) }}" class="text-blue-600 hover:underline">Edit</a>
                                 @endif
 
-                                @if($p->status === 'menunggu_konfirmasi')
+                                @if($p->status === 'belum_bayar')
                                     <form action="{{ route('pembayaran.konfirmasi', $p->id) }}" method="POST" class="inline">
                                         @csrf
                                         <button class="text-green-600 hover:underline">Konfirmasi</button>

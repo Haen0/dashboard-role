@@ -4,11 +4,11 @@
     </x-slot>
 
     <div class="p-4">
-        @if(auth()->user()->role === 'klien')
-            <h3 class="text-lg font-semibold mb-3">Tagihan Anda</h3>
+        {{-- @if(auth()->user()->role === 'klien')
+            <h3 class="text-lg font-semibold mb-3">Tagihan Anda</h3> --}}
 
             {{-- Filter Form --}}
-            <form method="GET" class="flex flex-wrap gap-3 items-center mb-4">
+            {{-- <form method="GET" class="flex flex-wrap gap-3 items-center mb-4">
                 <div>
                     <input name="jenis_kasus" value="{{ request('jenis_kasus') }}"
                         type="text"
@@ -47,10 +47,10 @@
                         Reset
                     </a>
                 </div>
-            </form>
+            </form> --}}
 
             {{-- Tabel Tagihan --}}
-            <div class="overflow-x-auto relative shadow-md rounded-lg bg-white">
+            {{-- <div class="overflow-x-auto relative shadow-md rounded-lg bg-white">
                 <table class="w-full text-sm text-left text-gray-500">
                     <thead class="text-xs text-gray-700 uppercase bg-gray-50">
                         <tr>
@@ -100,13 +100,13 @@
                         @endforelse
                     </tbody>
                 </table>
-            </div>
+            </div> --}}
 
-            <div class="mt-4">
+            {{-- <div class="mt-4">
                 {{ $tagihan->appends(request()->query())->links('vendor.pagination.custom') }}
             </div>
-        @else
+        @else --}}
             <p class="text-gray-600">Selamat datang di dashboard.</p>
-        @endif
+        {{-- @endif --}}
     </div>
 </x-app-layout>

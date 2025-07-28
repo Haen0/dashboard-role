@@ -16,6 +16,7 @@
 
         <form action="{{ route('pembayaran.update', $pembayaran->id) }}" method="POST">
             @csrf
+            @method('PUT')
             <div class="mb-4">
                 <label class="block text-sm font-medium text-gray-700">Klien</label>
                 <p class="text-gray-900 font-semibold">{{ $pembayaran->konsultasi->klien->nama ?? '-' }}</p>

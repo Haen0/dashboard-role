@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Pembayaran;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -84,23 +85,23 @@ class PembayaranController extends Controller
     }
 
     // KLien upload bukti pembayaran
-    public function uploadBukti(Request $request, Pembayaran $pembayaran)
-    {
-        $request->validate([
-            'metode' => 'required|in:transfer,cash,qris',
-            'bukti_pembayaran' => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048'
-        ]);
+    // public function uploadBukti(Request $request, Pembayaran $pembayaran)
+    // {
+    //     $request->validate([
+    //         'metode' => 'required|in:transfer,cash,qris',
+    //         'bukti_pembayaran' => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048'
+    //     ]);
 
-        $path = $request->file('bukti_pembayaran')->store('bukti_pembayaran', 'local');
+    //     $path = $request->file('bukti_pembayaran')->store('bukti_pembayaran', 'local');
 
-        $pembayaran->update([
-            'metode' => $request->metode,
-            'bukti_pembayaran' => $path,
-            'status' => 'menunggu_konfirmasi'
-        ]);
+    //     $pembayaran->update([
+    //         'metode' => $request->metode,
+    //         'bukti_pembayaran' => $path,
+    //         'status' => 'menunggu_konfirmasi'
+    //     ]);
 
-        return back()->with('success', 'Bukti pembayaran berhasil diupload.');
-    }
+    //     return back()->with('success', 'Bukti pembayaran berhasil diupload.');
+    // }
     
     public function previewBukti(Pembayaran $pembayaran)
     {
@@ -132,6 +133,7 @@ class PembayaranController extends Controller
 
         $pdf = Pdf::loadView('pembayaran.invoice', [
             'pembayaran' => $pembayaran,
+            'exported_at' => Carbon::now()->format('d-m-Y'),
         ]);
 
         $fileName = 'invoice-' . $pembayaran->id . '.pdf';

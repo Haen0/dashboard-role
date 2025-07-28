@@ -10,6 +10,7 @@ use App\Http\Controllers\JadwalController;
 use App\Http\Controllers\KlientController;
 use App\Http\Controllers\KonsultasiController;
 use App\Http\Controllers\PembayaranController;
+use App\Models\Pembayaran;
 
 Route::get('/', function () {
     return redirect()->route('dashboard');
@@ -50,14 +51,12 @@ Route::middleware(['role:superadmin'])->group(function () {
 // Hanya Superadmin
 Route::middleware(['role:klien'])->group(function () {
         // Klien upload bukti pembayaran
-    Route::get('/pembayaran/{pembayaran}/bayar', function (\App\Models\Pembayaran $pembayaran) {
+    Route::get('/pembayaran/{pembayaran}/bayar', function (Pembayaran $pembayaran) {
         return view('pembayaran.bayar', compact('pembayaran'));
     })->name('pembayaran.bayar');
 
     Route::post('/pembayaran/{pembayaran}/upload', [PembayaranController::class, 'uploadBukti'])
         ->name('pembayaran.upload');
-    Route::get('/pembayaran/{pembayaran}/invoice', [PembayaranController::class, 'invoice'])
-    ->name('pembayaran.invoice');
 
 });
 
@@ -97,6 +96,8 @@ Route::middleware(['role:keuangan,superadmin'])->group(function () {
     Route::get('/pembayaran/bukti/{pembayaran}', [PembayaranController::class, 'previewBukti'])
         ->name('pembayaran.preview')
         ->middleware('auth');
+    Route::get('/pembayaran/{pembayaran}/invoice', [PembayaranController::class, 'invoice'])
+    ->name('pembayaran.invoice');
 });
 
 // Admin, Keuangan, Advokat, Manajer, Superadmin (Laporan)
