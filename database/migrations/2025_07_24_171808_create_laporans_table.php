@@ -11,15 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
+        // database/migrations/xxxx_xx_xx_create_laporans_table.php
         Schema::create('laporans', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->enum('tipe_laporan', ['admin', 'advokat', 'keuangan', 'manajer']);
-            $table->date('tanggal_laporan');
-            $table->string('periode');
-            $table->integer('jumlah_kasus')->default(0);
-            $table->integer('jumlah_konsultasi')->default(0);
-            $table->integer('jumlah_dokumen')->default(0);
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->enum('tipe', ['harian', 'mingguan', 'bulanan']);
+            $table->date('tanggal');
+            $table->unsignedInteger('jumlah_kasus');
+            $table->unsignedInteger('jumlah_konsultasi');
             $table->text('catatan_manajer')->nullable();
             $table->timestamps();
         });

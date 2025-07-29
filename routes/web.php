@@ -11,6 +11,7 @@ use App\Http\Controllers\KlientController;
 use App\Http\Controllers\KonsultasiController;
 use App\Http\Controllers\PembayaranController;
 use App\Models\Pembayaran;
+use App\Http\Controllers\LaporanController;
 
 Route::get('/', function () {
     return redirect()->route('dashboard');
@@ -108,6 +109,16 @@ Route::middleware(['role:keuangan,superadmin'])->group(function () {
 // Admin, Keuangan, Advokat, Manajer, Superadmin (Laporan)
 Route::middleware(['role:admin,keuangan,advokat,manajer,superadmin'])->group(function () {
     
+});
+
+// Laporan
+Route::middleware(['role:admin,advokat,superadmin'])->group(function () {
+    Route::get('/laporans', [LaporanController::class, 'index'])->name('laporans.index');
+    Route::get('/laporans/create', [LaporanController::class, 'create'])->name('laporans.create');
+    Route::post('/laporans', [LaporanController::class, 'store'])->name('laporans.store');
+    Route::get('/laporans/{laporan}/edit', [LaporanController::class, 'edit'])->name('laporans.edit');
+    Route::put('/laporans/{laporan}', [LaporanController::class, 'update'])->name('laporans.update');
+    Route::delete('/laporans/{laporan}', [LaporanController::class, 'destroy'])->name('laporans.destroy');
 });
 
 require __DIR__.'/auth.php';
