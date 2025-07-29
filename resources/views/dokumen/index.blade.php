@@ -60,13 +60,13 @@
 
         <div class="overflow-x-auto relative shadow-md rounded-lg bg-white">
             <table class="w-full text-sm text-left text-gray-700">
-                <thead class="bg-gray-50 text-gray-700 uppercase">
+                <thead class="bg-gray-50 text-gray-700">
                     <tr>
                         <th class="px-4 py-3">Klien</th>
                         <th class="px-4 py-3">Advokat</th>
                         <th class="px-4 py-3">Dokumen Klien</th>
-                        <th class="px-4 py-3">Dokumen Admin</th>
-                        <th class="px-4 py-3">Dokumen Advokat</th>
+                        {{-- <th class="px-4 py-3">Dokumen Admin</th>
+                        <th class="px-4 py-3">Dokumen Advokat</th> --}}
                         <th class="px-4 py-3">Status</th>
                         <th class="px-4 py-3">Aksi</th>
                     </tr>
@@ -90,7 +90,7 @@
                                     <span class="text-gray-400 italic">Belum ada</span>
                                 @endif
                             </td>
-                            <td class="px-4 py-2">
+                            {{-- <td class="px-4 py-2">
                                 @if($dok_admin)
                                     <a href="{{ route('dokumens.preview', $dok_admin->id) }}" target="_blank"
                                     class="text-blue-600 hover:underline font-medium">
@@ -130,16 +130,16 @@
                                 @else
                                     <span class="text-gray-400 italic">Belum ada</span>
                                 @endif
-                            </td>
+                            </td> --}}
                             <td class="px-4 py-2">{{ ucfirst($k->status) }}</td>
                             <td class="px-4 py-2">
-                                @if(($dok_klien && $dok_admin && $dok_adv) && (auth()->user()->role === 'admin' || auth()->user()->role === 'superadmin') && $k->status !== 'selesai')
+                                @if($k->status !== 'selesai')
                                     <form action="{{ route('dokumen.hukum.selesaikan', $k->id) }}" method="POST">
                                         @csrf
-                                        <button class="bg-yellow-600 text-white px-3 py-1 rounded text-xs">Selesaikan</button>
+                                        <button class="bg-green-600 text-white px-3 py-1 rounded text-xs">Selesaikan</button>
                                     </form>
-                                @else
-                                    <span class="text-gray-400 italic">-</span>
+                                {{-- @else --}}
+                                    {{-- <span class="text-gray-400 italic">-</span> --}}
                                 @endif
                             </td>
                         </tr>

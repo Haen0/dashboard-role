@@ -15,7 +15,7 @@
                     <li x-data="{ open: {{ request()->routeIs('users.*') || request()->routeIs('klients.*') || request()->routeIs('advokats.*') ? 'true' : 'false' }} }">
                         <button type="button"
                             @click="open = !open"
-                            class="w-full flex items-center justify-between px-3 py-2 rounded hover:bg-gray-100 {{ request()->routeIs('users.*') || request()->routeIs('klients.*') || request()->routeIs('advokats.*') ? 'bg-gray-100 font-semibold' : '' }}">
+                            class="w-full flex items-center justify-between px-3 py-2 rounded hover:bg-gray-100">
                             <span>Manajemen User</span>
                             <svg class="w-4 h-4 transition-transform transform" :class="{ 'rotate-180': open }"
                                 fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
@@ -27,12 +27,14 @@
                         </button>
 
                         <ul x-show="open" x-transition class="ml-4 mt-2 space-y-2">
-                            <li>
-                                <a href="{{ route('users.index') }}"
-                                    class="block px-3 py-2 rounded hover:bg-gray-100 {{ request()->routeIs('users.*') ? 'bg-gray-100 font-semibold' : '' }}">
-                                    Semua User
-                                </a>
-                            </li>
+                            @if(in_array(auth()->user()->role, ['superadmin']))
+                                <li>
+                                    <a href="{{ route('users.index') }}"
+                                        class="block px-3 py-2 rounded hover:bg-gray-100 {{ request()->routeIs('users.*') ? 'bg-gray-100 font-semibold' : '' }}">
+                                        Semua User
+                                    </a>
+                                </li>
+                            @endif
                             <li>
                                 <a href="{{ route('klients.index') }}"
                                     class="block px-3 py-2 rounded hover:bg-gray-100 {{ request()->routeIs('klients.*') ? 'bg-gray-100 font-semibold' : '' }}">
@@ -65,7 +67,7 @@
                     <li x-data="{ open: {{ request()->routeIs('konsultasis.*') || request()->routeIs('jadwals.*') ? 'true' : 'false' }} }">
                         <button type="button"
                             @click="open = !open"
-                            class="w-full flex items-center justify-between px-3 py-2 rounded hover:bg-gray-100 {{ request()->routeIs('konsultasis.*') || request()->routeIs('jadwals.*') ? 'bg-gray-100 font-semibold' : '' }}">
+                            class="w-full flex items-center justify-between px-3 py-2 rounded hover:bg-gray-100">
                             <span>Konsultasi Hukum</span>
                             <svg class="w-4 h-4 transition-transform transform" :class="{ 'rotate-180': open }"
                                 fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
@@ -99,7 +101,7 @@
                 @if(in_array(auth()->user()->role, ['admin', 'advokat', 'superadmin']))
                     <li>
                         <a href="{{ route('dokumen.hukum.index') }}"
-                            class="block px-3 py-2 rounded hover:bg-gray-100 {{ request()->routeIs('dokumens.*') ? 'bg-gray-100 font-semibold' : '' }}">
+                            class="block px-3 py-2 rounded hover:bg-gray-100 {{ request()->routeIs('dokumen.hukum.*') ? 'bg-gray-100 font-semibold' : '' }}">
                             Dokumen Hukum
                         </a>
                     </li>
@@ -109,7 +111,7 @@
                 @if(in_array(auth()->user()->role, ['keuangan', 'superadmin']))
                     <li>
                         <a href="{{ route('pembayaran.index') }}"
-                            class="block px-3 py-2 rounded hover:bg-gray-100 {{ request()->routeIs('pembayarans.*') ? 'bg-gray-100 font-semibold' : '' }}">
+                            class="block px-3 py-2 rounded hover:bg-gray-100 {{ request()->routeIs('pembayaran.*') ? 'bg-gray-100 font-semibold' : '' }}">
                             Tagihan & Pembayaran
                         </a>
                     </li>

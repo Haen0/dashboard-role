@@ -40,7 +40,7 @@
                     <option value="keuangan" @selected(request('role') == 'keuangan')>Keuangan</option>
                     <option value="manajer" @selected(request('role') == 'manajer')>Manajer</option>
                     <option value="advokat" @selected(request('role') == 'advokat')>Advokat</option>
-                    <option value="klien" @selected(request('role') == 'klien')>Klien</option>
+                    {{-- <option value="klien" @selected(request('role') == 'klien')>Klien</option> --}}
                     @if(auth()->user()->role === 'superadmin')
                         <option value="superadmin" @selected(request('role') == 'superadmin')>Superadmin</option>
                     @endif

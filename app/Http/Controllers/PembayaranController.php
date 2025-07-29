@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Konsultasi;
 use App\Models\Pembayaran;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
@@ -41,38 +42,60 @@ class PembayaranController extends Controller
         return view('pembayaran.index', compact('pembayarans'));
     }
 
-    // FORM UPDATE: keuangan isi jumlah & tanggal
-    public function edit(Pembayaran $pembayaran)
+    public function create()
     {
-        if (!in_array(auth()->user()->role, ['keuangan', 'superadmin'])) {
-            abort(403, 'Akses ditolak');
-        }
+        $konsultasis = Konsultasi::with(['klien', 'advokat'])->get();
 
-        if ($pembayaran->status === 'sudah_bayar') {
-            return redirect()->route('pembayaran.index')->with('error', 'Tagihan sudah dibayar dan tidak dapat diedit.');
-        }
-
-        return view('pembayaran.edit', compact('pembayaran'));
+        return view('pembayaran.create', compact('konsultasis'));
     }
 
-    public function update(Request $request, Pembayaran $pembayaran)
+    public function store(Request $request)
     {
-        if (!in_array(auth()->user()->role, ['keuangan', 'superadmin'])) {
-            abort(403, 'Akses ditolak');
-        }
-
-        $request->validate([
+        $validated = $request->validate([
+            'konsultasi_id' => 'required|exists:konsultasis,id',
             'tanggal' => 'required|date',
-            'jumlah' => 'required|numeric|min:0'
+            'jumlah' => 'required|numeric|min:0',
+            'metode' => 'required|in:transfer,cash,qris',
         ]);
 
-        $pembayaran->update([
-            'tanggal' => $request->tanggal,
-            'jumlah' => $request->jumlah,
-            'status'  => 'belum_bayar' // setelah keuangan input, status awal = belum_bayar
+        Pembayaran::create($validated);
+
+        return redirect()->route('pembayaran.index')->with('success', 'Tagihan berhasil ditambahkan.');
+    }
+
+    public function edit($id)
+    {
+        $pembayaran = Pembayaran::findOrFail($id);
+        $konsultasis = Konsultasi::with(['klien', 'advokat'])->get();
+
+        return view('pembayaran.edit', compact('pembayaran', 'konsultasis'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $validated = $request->validate([
+            'konsultasi_id' => 'required|exists:konsultasis,id',
+            'tanggal' => 'required|date',
+            'jumlah' => 'required|numeric|min:0',
+            'metode' => 'required|in:transfer,cash,qris',
         ]);
 
-        return redirect()->route('pembayaran.index')->with('success', 'Data tagihan berhasil diperbarui.');
+        $pembayaran = Pembayaran::findOrFail($id);
+        $pembayaran->update($validated);
+
+        return redirect()->route('pembayaran.index')->with('success', 'Tagihan berhasil diperbarui.');
+    }
+
+    public function updateStatus(Request $request, $id)
+    {
+        $request->validate([
+            'status' => 'required|in:belum_bayar,menunggu_konfirmasi,sudah_bayar',
+        ]);
+
+        $pembayaran = Pembayaran::findOrFail($id);
+        $pembayaran->update(['status' => $request->status]);
+
+        return back()->with('success', 'Status tagihan berhasil diperbarui.');
     }
 
     public function bayar(Pembayaran $pembayaran)
@@ -83,25 +106,6 @@ class PembayaranController extends Controller
 
         return view('pembayaran.bayar', compact('pembayaran'));
     }
-
-    // KLien upload bukti pembayaran
-    // public function uploadBukti(Request $request, Pembayaran $pembayaran)
-    // {
-    //     $request->validate([
-    //         'metode' => 'required|in:transfer,cash,qris',
-    //         'bukti_pembayaran' => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048'
-    //     ]);
-
-    //     $path = $request->file('bukti_pembayaran')->store('bukti_pembayaran', 'local');
-
-    //     $pembayaran->update([
-    //         'metode' => $request->metode,
-    //         'bukti_pembayaran' => $path,
-    //         'status' => 'menunggu_konfirmasi'
-    //     ]);
-
-    //     return back()->with('success', 'Bukti pembayaran berhasil diupload.');
-    // }
     
     public function previewBukti(Pembayaran $pembayaran)
     {
@@ -141,4 +145,15 @@ class PembayaranController extends Controller
         return $pdf->download($fileName);
     }
 
+    public function destroy(Pembayaran $pembayaran)
+    {
+        // Optional: cek role
+        if (!in_array(auth()->user()->role, ['keuangan', 'superadmin'])) {
+            abort(403);
+        }
+
+        $pembayaran->delete();
+
+        return redirect()->route('pembayaran.index')->with('success', 'Tagihan berhasil dihapus.');
+    }
 }

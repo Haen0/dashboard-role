@@ -31,16 +31,5 @@ class UserSeeder extends Seeder
                 'role' => 'admin',
             ]
         );
-
-        // User
-        User::updateOrCreate(
-            ['email' => 'user@example.com'],
-            [
-                'name' => 'User Biasa',
-                'email' => 'user@example.com',
-                'password' => Hash::make('password'),
-                'role' => 'user',
-            ]
-        );
     }
 }

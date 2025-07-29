@@ -37,7 +37,7 @@
                 <label for="role" class="block mb-2 text-sm font-medium text-gray-900">Role</label>
                 <select name="role" id="role"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
-                    <option value="klien" @selected($user->role === 'klien')>Klien</option>
+                    {{-- <option value="klien" @selected($user->role === 'klien')>Klien</option> --}}
                     @if(auth()->user()->role === 'superadmin')
                         <option value="admin" @selected($user->role === 'admin')>Admin</option>
                         <option value="advokat" @selected($user->role === 'advokat')>Advokat</option>
