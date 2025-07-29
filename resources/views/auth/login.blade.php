@@ -4,7 +4,10 @@
 
     <form method="POST" action="{{ route('login') }}">
         @csrf
-
+        
+        <!-- Logo -->
+        <img src="{{ asset('logoPerusahaan.png') }}" alt="MR. OKY & PARTNERS" class="mx-auto w-32 h-auto mb-4">
+        
         <!-- Email Address -->
         <div>
             <x-input-label for="email" :value="__('Email')" />
@@ -39,9 +42,10 @@
                 </a>
             @endif
 
-            <x-primary-button class="ms-3">
+            <x-primary-button class="ms-3 bg-blue-600 hover:bg-blue-500 focus:bg-blue-500 active:bg-blue-700 focus:ring-blue-500">
                 {{ __('Log in') }}
             </x-primary-button>
+
         </div>
     </form>
 </x-guest-layout>
