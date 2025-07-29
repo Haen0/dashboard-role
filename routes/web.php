@@ -64,13 +64,13 @@ Route::middleware(['role:klien'])->group(function () {
 
 // Klien + Admin + Superadmin
 Route::middleware(['role:klien,admin,superadmin'])->group(function () {
-    // Route::resource('konsultasis', KonsultasiController::class);
+    Route::resource('konsultasis', KonsultasiController::class);
 });
 
 // Klien, Admin, Advokat, Superadmin (Lihat Konsultasi)
 Route::middleware(['role:klien,admin,advokat,superadmin'])->group(function () {
     Route::resource('konsultasis', KonsultasiController::class);
-    // Route::get('/konsultasis/{konsultasi}/preview', [KonsultasiController::class, 'previewDokumen'])->name('konsultasis.preview');
+    Route::get('/konsultasis/{konsultasi}/preview', [KonsultasiController::class, 'previewDokumen'])->name('konsultasis.preview');
     Route::get('dokumen/{dokumen}/preview', [KonsultasiController::class, 'previewDokumen'])
     ->name('dokumens.preview');
     Route::get('/jadwals', [JadwalController::class, 'index'])->name('jadwals.index');
