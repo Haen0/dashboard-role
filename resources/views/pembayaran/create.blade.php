@@ -1,12 +1,11 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="text-xl font-semibold text-gray-800">Edit Tagihan</h2>
+        <h2 class="text-xl font-semibold text-gray-800">Tambah Tagihan</h2>
     </x-slot>
 
     <div class="p-4 mx-auto bg-white rounded-lg shadow-md border border-gray-200">
-        <form method="POST" action="{{ route('pembayaran.update', $pembayaran->id) }}" class="space-y-4">
+        <form method="POST" action="{{ route('pembayaran.store') }}" class="space-y-4">
             @csrf
-            @method('PUT')
 
             {{-- Konsultasi --}}
             <div>
@@ -16,7 +15,7 @@
                     focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                     <option value="">-- Pilih Konsultasi --</option>
                     @foreach ($konsultasis as $k)
-                        <option value="{{ $k->id }}" @selected($pembayaran->konsultasi_id == $k->id)>
+                        <option value="{{ $k->id }}">
                             {{ $k->klien->nama ?? '-' }} - {{ $k->advokat->nama ?? '-' }}
                         </option>
                     @endforeach
@@ -29,7 +28,7 @@
             {{-- Jumlah --}}
             <div>
                 <label for="jumlah" class="block text-sm font-medium text-gray-900">Jumlah (Rp)</label>
-                <input type="number" name="jumlah" id="jumlah" required value="{{ $pembayaran->jumlah }}"
+                <input type="number" name="jumlah" id="jumlah" required
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg 
                     focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                 @error('jumlah')
@@ -40,7 +39,7 @@
             {{-- Tanggal --}}
             <div>
                 <label for="tanggal" class="block text-sm font-medium text-gray-900">Tanggal</label>
-                <input type="date" name="tanggal" id="tanggal" required value="{{ $pembayaran->tanggal }}"
+                <input type="date" name="tanggal" id="tanggal" required
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg 
                     focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                 @error('tanggal')
@@ -55,9 +54,9 @@
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg 
                     focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                     <option value="">-- Pilih Metode --</option>
-                    <option value="transfer" {{ $pembayaran->metode == 'transfer' ? 'selected' : '' }}>Transfer</option>
-                    <option value="cash" {{ $pembayaran->metode == 'cash' ? 'selected' : '' }}>Cash</option>
-                    <option value="qris" {{ $pembayaran->metode == 'qris' ? 'selected' : '' }}>QRIS</option>
+                    <option value="transfer">Transfer</option>
+                    <option value="cash">Cash</option>
+                    <option value="qris">QRIS</option>
                 </select>
                 @error('metode')
                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -69,7 +68,7 @@
                 <button type="submit"
                     class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none 
                     focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
-                    Update
+                    Simpan
                 </button>
                 <a href="{{ route('pembayaran.index') }}"
                     class="text-gray-600 bg-gray-100 hover:bg-gray-200 focus:ring-4 focus:outline-none 

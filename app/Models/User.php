@@ -57,10 +57,4 @@ class User extends Authenticatable
     {
         return $this->hasOne(Advokat::class);
     }
-
-    // Relasi ke Klient
-    public function klient()
-    {
-        return $this->hasOne(Klient::class);
-    }
 }

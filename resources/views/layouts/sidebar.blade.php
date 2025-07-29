@@ -32,20 +32,30 @@
                             <svg class="w-4 h-4 transition-transform transform text-blue-500" :class="{ 'rotate-180': open }"
                                 fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+                            class="w-full flex items-center justify-between px-3 py-2 rounded hover:bg-gray-100">
+                            <span>Manajemen User</span>
+                            <svg class="w-4 h-4 transition-transform transform" :class="{ 'rotate-180': open }"
+                                fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M19 9l-7 7-7-7">
+                                </path>
                             </svg>
                         </button>
 
                         <ul x-show="open" x-transition class="ml-4 mt-2 space-y-2">
-                            <li>
-                                <a href="{{ route('users.index') }}"
-                                   class="flex items-center gap-2 px-3 py-2 rounded hover:bg-blue-100 {{ request()->routeIs('users.*') ? 'bg-blue-100 font-semibold' : '' }}">
-                                    <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            @if(in_array(auth()->user()->role, ['superadmin']))
+                                <li>
+                                    <a href="{{ route('users.index') }}"
+                                       class="flex items-center gap-2 px-3 py-2 rounded hover:bg-blue-100 {{ request()->routeIs('users.*') ? 'bg-blue-100 font-semibold' : '' }}">
+                                        <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                               d="M5 12h14M12 5l7 7-7 7"/>
                                     </svg>
                                     Semua User
-                                </a>
-                            </li>
+                                    </a>
+                                </li>
+                            @endif
                             <li>
                                 <a href="{{ route('klients.index') }}"
                                    class="flex items-center gap-2 px-3 py-2 rounded hover:bg-blue-100 {{ request()->routeIs('klients.*') ? 'bg-blue-100 font-semibold' : '' }}">

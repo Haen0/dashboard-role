@@ -33,18 +33,19 @@ Route::middleware(['auth'])->group(function () {
 });
 
 Route::middleware(['auth', 'role:admin,superadmin'])->group(function () {
+    Route::resource('/advokats', AdvokatController::class)->except(['show']);
+    // Route::get('/klients', [KlientController::class, 'index'])->name('klients.index');
+    Route::resource('klients', KlientController::class)->except(['show']);
+});
+
+// Hanya Superadmin
+Route::middleware(['role:superadmin'])->group(function () {
     Route::get('/users', [UserManagementController::class, 'index'])->name('users.index');
     Route::get('/users/create', [UserManagementController::class, 'create'])->name('users.create');
     Route::post('/users', [UserManagementController::class, 'store'])->name('users.store');
     Route::get('/users/{user}/edit', [UserManagementController::class, 'edit'])->name('users.edit');
     Route::put('/users/{user}', [UserManagementController::class, 'update'])->name('users.update');
     Route::delete('/users/{user}', [UserManagementController::class, 'destroy'])->name('users.destroy');
-    Route::resource('/advokats', AdvokatController::class)->except(['show']);
-    Route::get('/klients', [KlientController::class, 'index'])->name('klients.index');
-});
-
-// Hanya Superadmin
-Route::middleware(['role:superadmin'])->group(function () {
     // Route::resource('users', UserManagementController::class)->except(['index']); 
     // misal hanya superadmin bisa create/edit/hapus user
 });
@@ -79,8 +80,8 @@ Route::middleware(['role:klien,admin,advokat,superadmin'])->group(function () {
 Route::middleware(['role:admin,advokat,superadmin'])->group(function () {
     Route::prefix('dokumen-hukum')->name('dokumen.hukum.')->group(function () {
             Route::get('/', [DokumenController::class, 'index'])->name('index');
-            Route::post('/upload-admin/{konsultasi}', [DokumenController::class, 'uploadAdmin'])->name('upload.admin');
-            Route::post('/upload-advokat/{konsultasi}', [DokumenController::class, 'uploadAdvokat'])->name('upload.advokat');
+            // Route::post('/upload-admin/{konsultasi}', [DokumenController::class, 'uploadAdmin'])->name('upload.admin');
+            // Route::post('/upload-advokat/{konsultasi}', [DokumenController::class, 'uploadAdvokat'])->name('upload.advokat');
             Route::post('/selesaikan/{konsultasi}', [DokumenController::class, 'selesaikan'])->name('selesaikan');
         });
 });
@@ -88,10 +89,14 @@ Route::middleware(['role:admin,advokat,superadmin'])->group(function () {
 // Keuangan & Superadmin (Pembayaran)
 Route::middleware(['role:keuangan,superadmin'])->group(function () {
     Route::get('/pembayaran', [PembayaranController::class, 'index'])->name('pembayaran.index');
+    Route::get('/pembayaran/create', [PembayaranController::class, 'create'])->name('pembayaran.create');
+    Route::post('/pembayaran', [PembayaranController::class, 'store'])->name('pembayaran.store');
     Route::get('/pembayaran/{pembayaran}/edit', [PembayaranController::class, 'edit'])->name('pembayaran.edit');
     Route::put('/pembayaran/{pembayaran}', [PembayaranController::class, 'update'])->name('pembayaran.update');
     // Route::post('/pembayaran/{pembayaran}/update', [PembayaranController::class, 'update'])->name('pembayaran.update');
     // Route::post('/pembayaran/{pembayaran}/upload-bukti', [PembayaranController::class, 'uploadBukti'])->name('pembayaran.upload');
+    Route::patch('/pembayaran/{id}/status', [PembayaranController::class, 'updateStatus'])->name('pembayaran.updateStatus');
+    Route::delete('/pembayaran/{pembayaran}', [PembayaranController::class, 'destroy'])->name('pembayaran.destroy');
 
     Route::post('/pembayaran/{pembayaran}/konfirmasi', [PembayaranController::class, 'konfirmasi'])->name('pembayaran.konfirmasi');
     Route::get('/pembayaran/bukti/{pembayaran}', [PembayaranController::class, 'previewBukti'])

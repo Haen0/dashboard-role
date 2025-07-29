@@ -12,15 +12,9 @@ class Klient extends Model
     protected $table = 'klients';
 
     protected $fillable = [
-        'user_id',
         'nama',
         'email',
         'telepon',
         'alamat',
     ];
-
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
 }

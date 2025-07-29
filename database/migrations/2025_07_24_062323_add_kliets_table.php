@@ -13,7 +13,6 @@ return new class extends Migration
     {
         Schema::create('klients', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->string('nama');
             $table->string('email')->unique();
             $table->string('telepon')->nullable();
@@ -27,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        //
+        Schema::dropIfExists('klients');
     }
 };

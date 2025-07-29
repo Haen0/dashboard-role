@@ -36,58 +36,58 @@ class DokumenController extends Controller
         return view('dokumen.index', compact('konsultasis'));
     }
 
-    public function uploadAdmin(Request $request, Konsultasi $konsultasi)
-    {
-        $request->validate(['dokumen' => 'required|file|mimes:pdf,doc,docx']);
-        $path = $request->file('dokumen')->store('dokumen_admin');
+    // public function uploadAdmin(Request $request, Konsultasi $konsultasi)
+    // {
+    //     $request->validate(['dokumen' => 'required|file|mimes:pdf,doc,docx']);
+    //     $path = $request->file('dokumen')->store('dokumen_admin');
 
-        Dokumen::create([
-            'konsultasi_id' => $konsultasi->id,
-            'nama_dokumen'  => $request->file('dokumen')->getClientOriginalName(),
-            'file_path'     => $path,
-            'jenis_dokumen' => 'admin',
-        ]);
+    //     Dokumen::create([
+    //         'konsultasi_id' => $konsultasi->id,
+    //         'nama_dokumen'  => $request->file('dokumen')->getClientOriginalName(),
+    //         'file_path'     => $path,
+    //         'jenis_dokumen' => 'admin',
+    //     ]);
 
-        return back()->with('success', 'Dokumen admin berhasil diupload.');
-    }
+    //     return back()->with('success', 'Dokumen admin berhasil diupload.');
+    // }
 
-    public function uploadAdvokat(Request $request, Konsultasi $konsultasi)
-    {
-        $request->validate(['dokumen' => 'required|file|mimes:pdf,doc,docx']);
-        $path = $request->file('dokumen')->store('dokumen_advokat');
+    // public function uploadAdvokat(Request $request, Konsultasi $konsultasi)
+    // {
+    //     $request->validate(['dokumen' => 'required|file|mimes:pdf,doc,docx']);
+    //     $path = $request->file('dokumen')->store('dokumen_advokat');
 
-        Dokumen::create([
-            'konsultasi_id' => $konsultasi->id,
-            'nama_dokumen'  => $request->file('dokumen')->getClientOriginalName(),
-            'file_path'     => $path,
-            'jenis_dokumen' => 'advokat',
-        ]);
+    //     Dokumen::create([
+    //         'konsultasi_id' => $konsultasi->id,
+    //         'nama_dokumen'  => $request->file('dokumen')->getClientOriginalName(),
+    //         'file_path'     => $path,
+    //         'jenis_dokumen' => 'advokat',
+    //     ]);
 
-        return back()->with('success', 'Dokumen advokat berhasil diupload.');
-    }
+    //     return back()->with('success', 'Dokumen advokat berhasil diupload.');
+    // }
 
     public function selesaikan(Konsultasi $konsultasi)
     {
-        $required = ['klien', 'admin', 'advokat'];
-        $uploaded = $konsultasi->dokumens->pluck('jenis_dokumen')->toArray();
+        // $required = ['klien', 'admin', 'advokat'];
+        // $uploaded = $konsultasi->dokumens->pluck('jenis_dokumen')->toArray();
 
-        foreach ($required as $jenis) {
-            if (!in_array($jenis, $uploaded)) {
-                return back()->with('error', 'Dokumen belum lengkap.');
-            }
-        }
+        // foreach ($required as $jenis) {
+        //     if (!in_array($jenis, $uploaded)) {
+        //         return back()->with('error', 'Dokumen belum lengkap.');
+        //     }
+        // }
 
         $konsultasi->update(['status' => 'selesai']);
 
         // Buat entry pembayaran otomatis jika belum ada
-        Pembayaran::firstOrCreate(
-            ['konsultasi_id' => $konsultasi->id],
-            [
-                'status' => 'belum_bayar',
-                'jumlah' => null,  // akan diisi oleh keuangan
-                'tanggal' => null  // akan diisi oleh keuangan
-            ]
-        );
+        // Pembayaran::firstOrCreate(
+        //     ['konsultasi_id' => $konsultasi->id],
+        //     [
+        //         'status' => 'belum_bayar',
+        //         'jumlah' => null,  // akan diisi oleh keuangan
+        //         'tanggal' => null  // akan diisi oleh keuangan
+        //     ]
+        // );
 
         return back()->with('success', 'Konsultasi berhasil diselesaikan dan tagihan dibuat.');
     }

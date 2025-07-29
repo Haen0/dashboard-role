@@ -16,8 +16,12 @@ class UserManagementController extends Controller
         $query = User::query();
 
         // Admin hanya bisa melihat klien & advokat
-        if (auth()->user()->role === 'admin') {
-            $query->whereIn('role', ['klien', 'advokat']);
+        if (auth()->user()->role === 'admin' ) {
+            $query->whereIn('role' ,'advokat');
+        }
+
+        if (auth()->user()->role === 'superadmin') {
+            $query->where('role', '!=', 'klien');
         }
 
         // Filter by name
@@ -58,12 +62,12 @@ class UserManagementController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|string|min:6|confirmed',
-            'role' => 'required|in:superadmin,admin,keuangan,manajer,advokat,klien',
+            'role' => 'required|in:superadmin,admin,keuangan,manajer,advokat',
         ]);
 
-        // Admin hanya boleh membuat klien & advokat
-        if (auth()->user()->role === 'admin' && !in_array($request->role, ['klien', 'advokat'])) {
-            abort(403, 'Admin hanya bisa membuat Klien atau Advokat.');
+        // Admin hanya boleh membuat advokat
+        if (auth()->user()->role === 'admin' && $request->role !== 'advokat') {
+            abort(403, 'Admin hanya bisa membuat Advokat.');
         }
 
         // Buat user utama
@@ -84,12 +88,6 @@ class UserManagementController extends Controller
             ]);
         } elseif ($request->role === 'advokat') {
             Advokat::create([
-                'user_id' => $user->id,
-                'nama' => $request->name,
-                'email' => $request->email,
-            ]);
-        } elseif ($request->role === 'klien') {
-            Klient::create([
                 'user_id' => $user->id,
                 'nama' => $request->name,
                 'email' => $request->email,
@@ -118,11 +116,11 @@ class UserManagementController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . $user->id,
-            'role' => 'required|in:superadmin,admin,keuangan,manajer,advokat,klien',
+            'role' => 'required|in:superadmin,admin,keuangan,manajer,advokat',
         ]);
 
-        if (auth()->user()->role === 'admin' && !in_array($request->role, ['klien', 'advokat'])) {
-            abort(403, 'Admin hanya bisa update Klien atau Advokat.');
+        if (auth()->user()->role === 'admin' && $request->role !== 'advokat') {
+            abort(403, 'Admin hanya bisa update Advokat.');
         }
 
         $user->update([
@@ -140,8 +138,6 @@ class UserManagementController extends Controller
             ]);
         } elseif ($user->role === 'advokat' && $user->advokat) {
             $user->advokat->update(['nama' => $request->name, 'email' => $request->email]);
-        } elseif ($user->role === 'klien' && $user->klient) {
-            $user->klient->update(['nama' => $request->name, 'email' => $request->email]);
         }
 
         return redirect()->route('users.index')->with('success', 'User berhasil diupdate.');
