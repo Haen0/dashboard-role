@@ -9,11 +9,15 @@
         @endif
 
         <div class="flex justify-between">
-            @if(in_array(auth()->user()->role, ['admin', 'superadmin', 'keuangan']))
+            @if(in_array(auth()->user()->role, ['admin', 'superadmin', 'keuangan', 'manajer']))
                 <a href="{{ route('laporans.create') }}"
                    class="text-white bg-blue-600 hover:bg-blue-700 font-medium rounded-lg text-sm px-4 py-2">Input Laporan</a>
             @endif
-            <a href="#" class="text-white bg-green-600 hover:bg-green-700 font-medium rounded-lg text-sm px-4 py-2">Cetak PDF</a>
+            {{-- <a href="#" class="text-white bg-green-600 hover:bg-green-700 font-medium rounded-lg text-sm px-4 py-2">Cetak PDF</a> --}}
+            <a href="{{ route('laporans.pdf') }}" target="_blank"
+                class="text-white bg-green-600 hover:bg-green-700 font-medium rounded-lg text-sm px-4 py-2">
+                Cetak PDF
+            </a>
         </div>
 
         <div class="overflow-x-auto bg-white shadow-md sm:rounded-lg">
@@ -39,7 +43,7 @@
                             <td class="px-6 py-4">{{ $laporan->jumlah_konsultasi }}</td>
                             <td class="px-6 py-4">{{ $laporan->catatan_manajer ?? '-' }}</td>
                             <td class="px-6 py-4 space-x-2">
-                                @if(auth()->user()->role === 'superadmin')
+                                @if(auth()->user()->role === 'superadmin' || auth()->user()->role === 'manajer')
                                     @if(!$laporan->catatan_manajer)
                                         <a href="{{ route('laporans.edit', $laporan->id) }}"
                                            class="text-blue-600 hover:underline">Isi Catatan</a>
@@ -47,7 +51,7 @@
                                         <span class="text-green-600">✔️ Sudah Diisi</span>
                                     @endif
                                 @endif
-                                @if(in_array(auth()->user()->role, ['admin', 'superadmin', 'keuangan']))
+                                @if(in_array(auth()->user()->role, ['admin', 'superadmin', 'keuangan', 'manajer']))
                                     <form action="{{ route('laporans.destroy', $laporan->id) }}" method="POST"
                                           class="inline-block"
                                           onsubmit="return confirm('Yakin ingin menghapus laporan ini?')">

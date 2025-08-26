@@ -110,7 +110,7 @@ class PembayaranController extends Controller
     public function previewBukti(Pembayaran $pembayaran)
     {
         // Hanya role tertentu yang boleh lihat bukti
-        if (!in_array(auth()->user()->role, ['keuangan', 'superadmin']) 
+        if (!in_array(auth()->user()->role, ['keuangan', 'superadmin', 'manajer']) 
             && auth()->id() !== $pembayaran->konsultasi->klien->user_id) {
             abort(403, 'Akses ditolak');
         }
@@ -148,7 +148,7 @@ class PembayaranController extends Controller
     public function destroy(Pembayaran $pembayaran)
     {
         // Optional: cek role
-        if (!in_array(auth()->user()->role, ['keuangan', 'superadmin'])) {
+        if (!in_array(auth()->user()->role, ['keuangan', 'superadmin', 'manajer'])) {
             abort(403);
         }
 

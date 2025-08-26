@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Laporan;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 
 class LaporanController extends Controller
@@ -55,6 +56,10 @@ class LaporanController extends Controller
             $laporan->update(['catatan_manajer' => $request->catatan_manajer]);
         }
 
+        if (auth()->user()->role === 'manajer') {
+            $laporan->update(['catatan_manajer' => $request->catatan_manajer]);
+        }
+
         return back()->with('success', 'Catatan manajer diperbarui');
     }
 
@@ -62,5 +67,15 @@ class LaporanController extends Controller
     {
         $laporan->delete();
         return back()->with('success', 'Laporan dihapus');
+    }
+
+    public function exportPdf()
+    {
+        $laporans = Laporan::with('user')->latest()->get();
+
+        $pdf = Pdf::loadView('laporans.pdf', compact('laporans'))
+                ->setPaper('a4', 'portrait');
+
+        return $pdf->download('laporan-'.now()->format('Y-m-d').'.pdf');
     }
 }

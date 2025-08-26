@@ -24,6 +24,11 @@ class UserManagementController extends Controller
             $query->where('role', '!=', 'klien');
         }
 
+        // Manajer bisa lihat semua kecuali klien & superadmin
+        if (auth()->user()->role === 'manajer') {
+            $query->whereNotIn('role', ['klien', 'superadmin']);
+        }
+
         // Filter by name
         if ($request->filled('name')) {
             $query->where('name', 'like', '%' . $request->name . '%');

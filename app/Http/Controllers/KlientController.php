@@ -32,7 +32,7 @@ class KlientController extends Controller
     public function create()
     {
         // Form hanya untuk admin/superadmin
-        if (!in_array(auth()->user()->role, ['admin', 'superadmin'])) {
+        if (!in_array(auth()->user()->role, ['admin', 'superadmin', 'manajer'])) {
             abort(403);
         }
 
@@ -62,7 +62,7 @@ class KlientController extends Controller
     public function edit($id)
     {
         // Cegah akses jika bukan admin/superadmin
-        if (!in_array(auth()->user()->role, ['admin', 'superadmin'])) {
+        if (!in_array(auth()->user()->role, ['admin', 'superadmin', 'manajer'])) {
             abort(403);
         }
 
@@ -73,7 +73,7 @@ class KlientController extends Controller
     public function update(Request $request, $id)
     {
         // Cegah akses jika bukan admin/superadmin
-        if (!in_array(auth()->user()->role, ['admin', 'superadmin'])) {
+        if (!in_array(auth()->user()->role, ['admin', 'superadmin', 'manajer'])) {
             abort(403);
         }
 
@@ -99,7 +99,7 @@ class KlientController extends Controller
     public function destroy(Klient $klient)
     {
         // Optional: cek role
-        if (!in_array(auth()->user()->role, ['admin', 'superadmin'])) {
+        if (!in_array(auth()->user()->role, ['admin', 'superadmin', 'manajer'])) {
             abort(403);
         }
 

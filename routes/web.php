@@ -30,16 +30,17 @@ Route::middleware(['auth'])->group(function () {
     Route::patch('/profile/advokat', [ProfileController::class, 'updateAdvokat'])->name('profile.update.advokat');
     Route::patch('/profile/klien', [ProfileController::class, 'updateKlien'])->name('profile.update.klien');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get('/laporans/pdf', [LaporanController::class, 'exportPdf'])->name('laporans.pdf');
 });
 
-Route::middleware(['auth', 'role:admin,superadmin'])->group(function () {
+Route::middleware(['auth', 'role:admin,superadmin,manajer'])->group(function () {
     Route::resource('/advokats', AdvokatController::class)->except(['show']);
     // Route::get('/klients', [KlientController::class, 'index'])->name('klients.index');
     Route::resource('klients', KlientController::class)->except(['show']);
 });
 
 // Hanya Superadmin
-Route::middleware(['role:superadmin'])->group(function () {
+Route::middleware(['role:superadmin,manajer'])->group(function () {
     Route::get('/users', [UserManagementController::class, 'index'])->name('users.index');
     Route::get('/users/create', [UserManagementController::class, 'create'])->name('users.create');
     Route::post('/users', [UserManagementController::class, 'store'])->name('users.store');
@@ -63,12 +64,12 @@ Route::middleware(['role:klien'])->group(function () {
 });
 
 // Klien + Admin + Superadmin
-Route::middleware(['role:klien,admin,superadmin'])->group(function () {
+Route::middleware(['role:klien,admin,superadmin,manajer'])->group(function () {
     Route::resource('konsultasis', KonsultasiController::class);
 });
 
 // Klien, Admin, Advokat, Superadmin (Lihat Konsultasi)
-Route::middleware(['role:klien,admin,advokat,superadmin'])->group(function () {
+Route::middleware(['role:klien,admin,advokat,superadmin,manajer'])->group(function () {
     Route::resource('konsultasis', KonsultasiController::class);
     Route::get('/konsultasis/{konsultasi}/preview', [KonsultasiController::class, 'previewDokumen'])->name('konsultasis.preview');
     Route::get('dokumen/{dokumen}/preview', [KonsultasiController::class, 'previewDokumen'])
@@ -77,7 +78,7 @@ Route::middleware(['role:klien,admin,advokat,superadmin'])->group(function () {
 });
 
 // Admin, Advokat, Superadmin (Dokumen)
-Route::middleware(['role:admin,advokat,superadmin'])->group(function () {
+Route::middleware(['role:admin,advokat,superadmin,manajer'])->group(function () {
     Route::prefix('dokumen-hukum')->name('dokumen.hukum.')->group(function () {
             Route::get('/', [DokumenController::class, 'index'])->name('index');
             // Route::post('/upload-admin/{konsultasi}', [DokumenController::class, 'uploadAdmin'])->name('upload.admin');
@@ -87,7 +88,7 @@ Route::middleware(['role:admin,advokat,superadmin'])->group(function () {
 });
 
 // Keuangan & Superadmin (Pembayaran)
-Route::middleware(['role:keuangan,superadmin'])->group(function () {
+Route::middleware(['role:keuangan,superadmin,manajer'])->group(function () {
     Route::get('/pembayaran', [PembayaranController::class, 'index'])->name('pembayaran.index');
     Route::get('/pembayaran/create', [PembayaranController::class, 'create'])->name('pembayaran.create');
     Route::post('/pembayaran', [PembayaranController::class, 'store'])->name('pembayaran.store');
@@ -112,7 +113,7 @@ Route::middleware(['role:admin,keuangan,advokat,manajer,superadmin'])->group(fun
 });
 
 // Laporan
-Route::middleware(['role:admin,advokat,superadmin'])->group(function () {
+Route::middleware(['role:admin,advokat,superadmin,manajer'])->group(function () {
     Route::get('/laporans', [LaporanController::class, 'index'])->name('laporans.index');
     Route::get('/laporans/create', [LaporanController::class, 'create'])->name('laporans.create');
     Route::post('/laporans', [LaporanController::class, 'store'])->name('laporans.store');

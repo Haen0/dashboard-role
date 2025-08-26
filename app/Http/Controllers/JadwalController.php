@@ -23,7 +23,7 @@ class JadwalController extends Controller
         }
 
         // Filter tambahan (hanya admin/superadmin)
-        if (in_array(auth()->user()->role, ['admin', 'superadmin'])) {
+        if (in_array(auth()->user()->role, ['admin', 'superadmin', 'manajer'])) {
             if ($request->filled('klien')) {
                 $query->whereHas('konsultasi.klien', function ($q) use ($request) {
                     $q->where('nama', 'like', '%' . $request->klien . '%');

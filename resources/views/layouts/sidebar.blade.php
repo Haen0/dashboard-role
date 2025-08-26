@@ -19,7 +19,7 @@
                 <hr class="p-2">
 
                 {{-- Manajemen User --}}
-                @if(in_array(auth()->user()->role, ['admin', 'superadmin']))
+                @if(in_array(auth()->user()->role, ['admin', 'superadmin', 'manajer']))
                     <li x-data="{ open: {{ request()->routeIs('users.*') || request()->routeIs('klients.*') || request()->routeIs('advokats.*') ? 'true' : 'false' }} }">
                         <button type="button"
                             @click="open = !open"
@@ -39,7 +39,7 @@
                         </button>
 
                         <ul x-show="open" x-transition class="ml-4 mt-2 space-y-2">
-                            @if(in_array(auth()->user()->role, ['superadmin']))
+                            @if(in_array(auth()->user()->role, ['superadmin', 'manajer']))
                                 <li>
                                     <a href="{{ route('users.index') }}"
                                        class="flex items-center gap-2 px-3 py-2 rounded hover:bg-blue-100 {{ request()->routeIs('users.*') ? 'bg-blue-100 font-semibold' : '' }}">
@@ -76,7 +76,7 @@
                 @endif
 
                 {{-- Konsultasi Hukum --}}
-                @if(in_array(auth()->user()->role, ['klien', 'admin', 'advokat', 'superadmin']))
+                @if(in_array(auth()->user()->role, ['klien', 'admin', 'advokat', 'superadmin', 'manajer']))
                     <li x-data="{ open: {{ request()->routeIs('konsultasis.*') || request()->routeIs('jadwals.*') ? 'true' : 'false' }} }">
                         <button type="button"
                             @click="open = !open"
@@ -95,7 +95,7 @@
                         </button>
 
                         <ul x-show="open" x-transition class="ml-4 mt-2 space-y-2">
-                            @if(in_array(auth()->user()->role, ['klien', 'admin', 'superadmin']))
+                            @if(in_array(auth()->user()->role, ['klien', 'admin', 'superadmin', 'manajer']))
                                 <li>
                                     <a href="{{ route('konsultasis.create') }}"
                                        class="flex items-center gap-2 px-3 py-2 rounded hover:bg-blue-100 {{ request()->routeIs('konsultasis.create') ? 'bg-blue-100 font-semibold' : '' }}">
@@ -132,7 +132,7 @@
                 @endif
 
                 {{-- Dokumen Hukum --}}
-                @if(in_array(auth()->user()->role, ['admin', 'advokat', 'superadmin']))
+                @if(in_array(auth()->user()->role, ['admin', 'advokat', 'superadmin', 'manajer']))
                     <li>
                         <a href="{{ route('dokumen.hukum.index') }}"
                            class="flex items-center gap-2 px-3 py-2 rounded hover:bg-blue-100 {{ request()->routeIs('dokumen.hukum.index') ? 'bg-blue-100 font-semibold' : '' }}">
@@ -145,7 +145,7 @@
                 @endif
 
                 {{-- Tagihan & Pembayaran --}}
-                @if(in_array(auth()->user()->role, ['keuangan', 'superadmin']))
+                @if(in_array(auth()->user()->role, ['keuangan', 'superadmin', 'manajer']))
                     <li>
                         <a href="{{ route('pembayaran.index') }}"
                         class="flex items-center gap-2 px-3 py-2 rounded hover:bg-blue-100 {{ request()->routeIs('pembayaran.index') ? 'bg-blue-100 font-semibold' : '' }}">

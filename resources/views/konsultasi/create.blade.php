@@ -8,7 +8,7 @@
             @csrf
 
             {{-- Klien ( hanya tampil jika role = admin ) --}}
-            @if(in_array(auth()->user()->role, ['admin', 'superadmin']))
+            @if(in_array(auth()->user()->role, ['admin', 'superadmin', 'manajer']))
                 <div>
                     <label for="klien_id" class="block mb-2 text-sm font-medium text-gray-900">Klien</label>
                     <select name="klien_id" id="klien_id"

@@ -8,7 +8,7 @@
             <div class="bg-green-100 text-green-800 p-2 mb-4 rounded">{{ session('success') }}</div>
         @endif
 
-        @if(auth()->user()->role === 'superadmin' || auth()->user()->role === 'admin')
+        @if(auth()->user()->role === 'superadmin' || auth()->user()->role === 'admin' || auth()->user()->role === 'manajer')
             <div class="mb-4">
                 <a href="{{ route('klients.create') }}"
                 class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-green-600 rounded-lg hover:bg-green-700 focus:ring-4 focus:outline-none focus:ring-green-300">
@@ -81,7 +81,7 @@
                             <td class="px-6 py-4">{{ $klient->telepon }}</td>
                             <td class="px-6 py-4">{{ $klient->alamat }}</td>
                             <td class="px-6 py-4">
-                                @if(auth()->user()->role === 'superadmin' || auth()->user()->role === 'admin')
+                                @if(auth()->user()->role === 'superadmin' || auth()->user()->role === 'admin' || auth()->user()->role === 'manajer')
                                     <div class="flex space-x-2">
                                         <a href="{{ route('klients.edit', $klient->id) }}"
                                         class="text-blue-600 hover:underline text-sm">Edit</a>

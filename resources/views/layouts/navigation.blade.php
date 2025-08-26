@@ -70,7 +70,7 @@
                 Dashboard
             </x-responsive-nav-link>
 
-            @if(auth()->user()->role === 'superadmin')
+            @if(auth()->user()->role === 'superadmin' || auth()->user()->role === 'manajer')
                 <div class="border-t border-gray-200"></div>
 
                 {{-- Dropdown Toggle --}}
@@ -100,13 +100,13 @@
                 </div>
             @endif
 
-            @if(in_array(auth()->user()->role, ['klien', 'admin', 'superadmin']))
+            @if(in_array(auth()->user()->role, ['klien', 'admin', 'superadmin', 'manajer']))
                 <x-responsive-nav-link :href="route('users.create')" :active="request()->routeIs('konsultasis.create')">
                     Ajukan Konsultasi
                 </x-responsive-nav-link>
             @endif
 
-            @if(in_array(auth()->user()->role, ['klien', 'admin', 'advokat', 'superadmin']))
+            @if(in_array(auth()->user()->role, ['klien', 'admin', 'advokat', 'superadmin', 'manajer']))
                 <div class="border-t border-gray-200"></div>
 
                 {{-- Dropdown Toggle --}}
@@ -127,7 +127,7 @@
                         <x-responsive-nav-link :href="route('users.index')" :active="request()->routeIs('konsultasis.index')">
                             Daftar Konsultasi
                         </x-responsive-nav-link>
-                        @if(in_array(auth()->user()->role, ['klien', 'admin', 'superadmin']))
+                        @if(in_array(auth()->user()->role, ['klien', 'admin', 'superadmin', 'manajer']))
                             <x-responsive-nav-link :href="route('users.index')" :active="request()->routeIs('jadwals.index')">
                                 Jadwal Konsultasi
                             </x-responsive-nav-link>
@@ -136,13 +136,13 @@
                 </div>
             @endif
 
-            @if(in_array(auth()->user()->role, ['admin', 'advokat', 'superadmin']))
+            @if(in_array(auth()->user()->role, ['admin', 'advokat', 'superadmin', 'manajer']))
                 <x-responsive-nav-link :href="route('users.index')" :active="request()->routeIs('dokumens.*')">
                     Dokumen Hukum
                 </x-responsive-nav-link>
             @endif
 
-            @if(in_array(auth()->user()->role, ['keuangan', 'superadmin']))
+            @if(in_array(auth()->user()->role, ['keuangan', 'superadmin', 'manajer']))
                 <x-responsive-nav-link :href="route('users.index')" :active="request()->routeIs('pembayarans.*')">
                     Tagihan & Pembayaran
                 </x-responsive-nav-link>

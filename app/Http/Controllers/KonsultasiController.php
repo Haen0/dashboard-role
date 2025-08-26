@@ -52,7 +52,7 @@ class KonsultasiController extends Controller
     public function create()
     {
         // Jika klien, tidak perlu pilih klien
-        $klients = in_array(auth()->user()->role, ['admin', 'superadmin']) ? Klient::all() : null;
+        $klients = in_array(auth()->user()->role, ['admin', 'superadmin', 'manajer']) ? Klient::all() : null;
         $advokats = Advokat::all();
 
         return view('konsultasi.create', compact('klients', 'advokats'));
@@ -68,7 +68,7 @@ class KonsultasiController extends Controller
             'dokumen' => 'nullable|file|mimes:pdf,doc,docx'
         ];
 
-        if (in_array(auth()->user()->role, ['admin', 'superadmin'])) {
+        if (in_array(auth()->user()->role, ['admin', 'superadmin', 'manajer'])) {
             $rules['klien_id'] = 'required|exists:klients,id';
         }
 
@@ -106,7 +106,7 @@ class KonsultasiController extends Controller
 
     public function update(Request $request, Konsultasi $konsultasi)
     {
-        if (!in_array(auth()->user()->role, ['admin', 'superadmin'])) {
+        if (!in_array(auth()->user()->role, ['admin', 'superadmin', 'manajer'])) {
             abort(403, 'Akses ditolak.');
         }
 

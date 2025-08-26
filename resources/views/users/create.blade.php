@@ -54,12 +54,14 @@
                 <select name="role" id="role"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                     {{-- <option value="klien" @selected(old('role') === 'klien')>Klien</option> --}}
-                    @if(auth()->user()->role === 'superadmin')
+                    @if(auth()->user()->role === 'superadmin' || auth()->user()->role === 'manajer')
                         <option value="admin" @selected(old('role') === 'admin')>Admin</option>
                         <option value="advokat" @selected(old('role') === 'advokat')>Advokat</option>
                         <option value="keuangan" @selected(old('role') === 'keuangan')>Keuangan</option>
                         <option value="manajer" @selected(old('role') === 'manajer')>Manajer</option>
-                        <option value="superadmin" @selected(old('role') === 'superadmin')>Superadmin</option>
+                        @if(auth()->user()->role === 'superadmin')
+                            <option value="superadmin" @selected(old('role') === 'superadmin')>Superadmin</option>
+                        @endif
                     @endif
                 </select>
             </div>

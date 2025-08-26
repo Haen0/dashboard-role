@@ -92,7 +92,7 @@
                                 @endif
                             </td>
                             <td class="px-6 py-4 text-right space-x-2">
-                                @if(in_array(auth()->user()->role, ['admin', 'superadmin']))
+                                @if(in_array(auth()->user()->role, ['admin', 'superadmin', 'manajer']))
                                     @if($konsultasi->status === 'pending')
                                         <a href="{{ route('konsultasis.edit', $konsultasi->id) }}"
                                             class="text-blue-600 hover:underline">Atur Advokat & Jadwal</a>
