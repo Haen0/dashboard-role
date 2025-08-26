@@ -20,8 +20,7 @@
             <table class="w-full text-sm text-left text-gray-500">
                 <thead class="text-xs text-gray-700 uppercase bg-gray-50">
                     <tr>
-                        <th class="px-6 py-3">Tanggal Dibuat</th>
-                        <th class="px-6 py-3">Tipe</th>
+                        <th class="px-6 py-3">Periode Laporan</th>
                         <th class="px-6 py-3">Jumlah Kasus</th>
                         <th class="px-6 py-3">Jumlah Konsultasi</th>
                         <th class="px-6 py-3">Catatan</th>
@@ -31,8 +30,11 @@
                 <tbody>
                     @foreach($laporans as $laporan)
                         <tr class="bg-white border-b hover:bg-gray-50">
-                            <td class="px-6 py-4">{{ $laporan->tanggal }}</td>
-                            <td class="px-6 py-4">{{ ucfirst($laporan->tipe) }}</td>
+                            <td class="px-6 py-4">
+                                {{ \Carbon\Carbon::parse($laporan->tanggal_dari)->format('d-m-Y') }}
+                                s/d
+                                {{ \Carbon\Carbon::parse($laporan->tanggal_ke)->format('d-m-Y') }}
+                            </td>
                             <td class="px-6 py-4">{{ $laporan->jumlah_kasus }}</td>
                             <td class="px-6 py-4">{{ $laporan->jumlah_konsultasi }}</td>
                             <td class="px-6 py-4">{{ $laporan->catatan_manajer ?? '-' }}</td>
@@ -40,7 +42,7 @@
                                 @if(auth()->user()->role === 'superadmin')
                                     @if(!$laporan->catatan_manajer)
                                         <a href="{{ route('laporans.edit', $laporan->id) }}"
-                                        class="text-blue-600 hover:underline">Isi Catatan</a>
+                                           class="text-blue-600 hover:underline">Isi Catatan</a>
                                     @else
                                         <span class="text-green-600">✔️ Sudah Diisi</span>
                                     @endif

@@ -5,10 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Laporan;
 use Illuminate\Http\Request;
 
-// app/Http/Controllers/LaporanController.php
 class LaporanController extends Controller
 {
-
     public function index()
     {
         $laporans = Laporan::with('user')->latest()->paginate(10);
@@ -26,14 +24,14 @@ class LaporanController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'tipe' => 'required|in:harian,mingguan,bulanan',
-            'tanggal' => 'required|date',
+            'tanggal_dari' => 'required|date',
+            'tanggal_ke' => 'required|date|after_or_equal:tanggal_dari',
         ]);
 
-        $laporan = Laporan::create([
+        Laporan::create([
             'user_id' => auth()->id(),
-            'tipe' => $request->tipe,
-            'tanggal' => $request->tanggal,
+            'tanggal_dari' => $request->tanggal_dari,
+            'tanggal_ke' => $request->tanggal_ke,
             'jumlah_kasus' => \App\Models\Konsultasi::distinct('jenis_kasus')->count('jenis_kasus'),
             'jumlah_konsultasi' => \App\Models\Konsultasi::count(),
         ]);
@@ -41,7 +39,6 @@ class LaporanController extends Controller
         return redirect()->route('laporans.index')
             ->with('success', 'Laporan berhasil ditambahkan. Anda bisa menambahkan catatan manajer.');
     }
-
 
     public function edit(Laporan $laporan)
     {
