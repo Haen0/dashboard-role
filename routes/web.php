@@ -120,6 +120,7 @@ Route::middleware(['role:admin,advokat,superadmin,manajer'])->group(function () 
     Route::get('/laporans/{laporan}/edit', [LaporanController::class, 'edit'])->name('laporans.edit');
     Route::put('/laporans/{laporan}', [LaporanController::class, 'update'])->name('laporans.update');
     Route::delete('/laporans/{laporan}', [LaporanController::class, 'destroy'])->name('laporans.destroy');
+    Route::get('/laporans/hitung', [LaporanController::class, 'hitung'])->name('laporans.hitung');
 });
 
 require __DIR__.'/auth.php';

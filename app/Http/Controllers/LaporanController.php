@@ -17,7 +17,8 @@ class LaporanController extends Controller
     public function create()
     {
         $jumlah_konsultasi = \App\Models\Konsultasi::count();
-        $jumlah_kasus = \App\Models\Konsultasi::distinct('jenis_kasus')->count('jenis_kasus');
+        // $jumlah_kasus = \App\Models\Konsultasi::distinct('jenis_kasus')->count('jenis_kasus');
+        $jumlah_kasus = $jumlah_konsultasi;
 
         return view('laporans.create', compact('jumlah_kasus', 'jumlah_konsultasi'));
     }
@@ -41,6 +42,29 @@ class LaporanController extends Controller
             ->with('success', 'Laporan berhasil ditambahkan. Anda bisa menambahkan catatan manajer.');
     }
 
+    public function hitung(Request $request)
+    {
+        $request->validate([
+            'tanggal_dari' => 'required|date',
+            'tanggal_ke' => 'required|date|after_or_equal:tanggal_dari',
+        ]);
+
+        $jumlah_konsultasi = \App\Models\Konsultasi::whereBetween('tanggal', [
+            $request->tanggal_dari,
+            $request->tanggal_ke,
+        ])->count();
+
+        $jumlah_kasus = \App\Models\Konsultasi::whereBetween('tanggal', [
+            $request->tanggal_dari,
+            $request->tanggal_ke,
+        ])->distinct('jenis_kasus')->count('jenis_kasus');
+
+        return response()->json([
+            'jumlah_kasus' => $jumlah_kasus,
+            'jumlah_konsultasi' => $jumlah_konsultasi,
+        ]);
+    }
+
     public function edit(Laporan $laporan)
     {
         return view('laporans.edit', compact('laporan'));
@@ -60,7 +84,8 @@ class LaporanController extends Controller
             $laporan->update(['catatan_manajer' => $request->catatan_manajer]);
         }
 
-        return back()->with('success', 'Catatan manajer diperbarui');
+        return redirect()->route('laporans.index')
+            ->with('success', 'Catatan manajer diperbarui');
     }
 
     public function destroy(Laporan $laporan)

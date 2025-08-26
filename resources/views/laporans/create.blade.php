@@ -24,17 +24,31 @@
             </div>
 
             {{-- Jumlah Kasus --}}
-            <div>
+            {{-- <div>
                 <label class="block mb-1 text-sm font-medium text-gray-700">Jumlah Kasus</label>
                 <input type="number" value="{{ $jumlah_kasus }}" disabled
                        class="bg-gray-100 border border-gray-300 text-sm rounded-lg w-full p-2.5 cursor-not-allowed" />
+            </div> --}}
+
+            {{-- Jumlah Konsultasi --}}
+            {{-- <div>
+                <label class="block mb-1 text-sm font-medium text-gray-700">Jumlah Konsultasi</label>
+                <input type="number" value="{{ $jumlah_konsultasi }}" disabled
+                       class="bg-gray-100 border border-gray-300 text-sm rounded-lg w-full p-2.5 cursor-not-allowed" />
+            </div> --}}
+
+            {{-- Jumlah Kasus --}}
+            <div>
+                <label class="block mb-1 text-sm font-medium text-gray-700">Jumlah Kasus</label>
+                <input type="number" id="jumlah_kasus" value="0" disabled
+                    class="bg-gray-100 border border-gray-300 text-sm rounded-lg w-full p-2.5 cursor-not-allowed" />
             </div>
 
             {{-- Jumlah Konsultasi --}}
             <div>
                 <label class="block mb-1 text-sm font-medium text-gray-700">Jumlah Konsultasi</label>
-                <input type="number" value="{{ $jumlah_konsultasi }}" disabled
-                       class="bg-gray-100 border border-gray-300 text-sm rounded-lg w-full p-2.5 cursor-not-allowed" />
+                <input type="number" id="jumlah_konsultasi" value="0" disabled
+                    class="bg-gray-100 border border-gray-300 text-sm rounded-lg w-full p-2.5 cursor-not-allowed" />
             </div>
 
             {{-- Tombol Submit --}}
@@ -46,4 +60,27 @@
             </div>
         </form>
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const dari = document.querySelector('input[name="tanggal_dari"]');
+            const ke   = document.querySelector('input[name="tanggal_ke"]');
+            const jumlahKasus = document.getElementById('jumlah_kasus');
+            const jumlahKonsultasi = document.getElementById('jumlah_konsultasi');
+
+            function updateJumlah() {
+                if (dari.value && ke.value) {
+                    fetch(`{{ route('laporans.hitung') }}?tanggal_dari=${dari.value}&tanggal_ke=${ke.value}`)
+                        .then(res => res.json())
+                        .then(data => {
+                            jumlahKasus.value = data.jumlah_kasus;
+                            jumlahKonsultasi.value = data.jumlah_konsultasi;
+                        });
+                }
+            }
+
+            dari.addEventListener('change', updateJumlah);
+            ke.addEventListener('change', updateJumlah);
+        });
+    </script>
+
 </x-app-layout>
